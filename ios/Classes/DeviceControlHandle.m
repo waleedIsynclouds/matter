@@ -549,18 +549,18 @@ static NSString *onNOCChainGeneration(NSString *params) {
     return createFlutterRequestResultWithCode(0, @{@"data": error == nil ? @(0) : @([error code])});
 }
 
-//static NSString *setCompletionListener(NSString *params) {
-//    NSDictionary *jsonObject = parseJSONString(params);
-//    NSString *handle = requestJsonValueNotNull(jsonObject, jsonKeyHandle);
-//    ZGMTRDeviceController *deviceController = getZGMTRDeviceController(handle);
-//    if ([deviceController isEqual:[NSNull null]] || deviceController == nil) {
-//        @throw [NSException exceptionWithName:@"setCompletionListener"
-//                                       reason:@"Not found deviceController"
-//                                     userInfo:nil];
-//    }
-//    [deviceController setPairingDelegate:[[PairingDelegateWarp alloc] initWithHandle:handle] queue:dispatch_queue_create("completionListener", DISPATCH_QUEUE_SERIAL)];
-//    return createFlutterRequestResultWithCode(0, @{});
-//}
+static NSString *setCompletionListener(NSString *params) {
+    NSDictionary *jsonObject = parseJSONString(params);
+    NSString *handle = requestJsonValueNotNull(jsonObject, jsonKeyHandle);
+    ZGMTRDeviceController *deviceController = getZGMTRDeviceController(handle);
+    if ([deviceController isEqual:[NSNull null]] || deviceController == nil) {
+        @throw [NSException exceptionWithName:@"setCompletionListener"
+                                       reason:@"Not found deviceController"
+                                     userInfo:nil];
+    }
+    [deviceController setPairingDelegate:[[PairingDelegateWarp alloc] initWithHandle:handle commissioningParameters:nil deviceController:deviceController deviceId:nil] queue:dispatch_queue_create("completionListener", DISPATCH_QUEUE_SERIAL)];
+    return createFlutterRequestResultWithCode(0, @{});
+}
 
 static NSString *publicKeyFromCSR(NSString *params) {
     NSDictionary *jsonObject = parseJSONString(params);
@@ -630,11 +630,16 @@ static NSString *pairDevice(NSString *params) {
     NSString *attestationDelegate = [jsonObject objectForKey:@"attestationDelegate"];
     NSString *ssid = nil;
     NSString *pwd = nil;
+    NSData *threadOperationalDataset = nil;
     if (![networkCredentials isEqual:[NSNull null]]) {
         NSDictionary *wifiCredentials = [networkCredentials objectForKey:@"wifiCredentials"];
-        if (![wifiCredentials isEqual:[NSNull null]]) {
+        if (wifiCredentials != nil && ![wifiCredentials isEqual:[NSNull null]]) {
             ssid = [wifiCredentials objectForKey:@"ssid"];
             pwd = [wifiCredentials objectForKey:@"password"];
+        }
+        NSDictionary *threadCredentials = [networkCredentials objectForKey:@"threadCredentials"];
+        if (threadCredentials != nil && ![threadCredentials isEqual:[NSNull null]]) {
+            threadOperationalDataset = toByteArrayFromJSONArray([threadCredentials objectForKey:@"operationalDataset"]);
         }
     }
     
@@ -660,6 +665,8 @@ static NSString *pairDevice(NSString *params) {
                 if (ssid != nil && pwd != nil) {
                     commissioningParams.wifiSSID = [ssid dataUsingEncoding:NSUTF8StringEncoding];
                     commissioningParams.wifiCredentials = [pwd dataUsingEncoding:NSUTF8StringEncoding];
+                } else if (threadOperationalDataset != nil) {
+                    commissioningParams.threadOperationalDataset = threadOperationalDataset;
                 }
                 if (![attestationDelegate isEqual:[NSNull null]]) {
                     [commissioningParams setDeviceAttestationDelegate:[[DeviceAttestationDelegate alloc] initWithHandle:handle]];
@@ -909,14 +916,16 @@ static NSString * subscribe(NSString * params) {
    NSString *callbackId = requestJsonValueNotNull(jsonObject, @"callbackHandle");
    NSNumber *nodeId = requestJsonValueNotNull(jsonObject, @"nodeId");
    NSArray * attributePathsJson = [jsonObject objectForKey:@"attributePaths"];
-   NSArray * eventPathsJson = [jsonObject objectForKey:@"eventPathsJson"];
+   NSArray * eventPathsJson = [jsonObject objectForKey:@"eventPaths"];
    NSNumber * minInterval = requestJsonValueNotNull(jsonObject, @"minInterval");
    NSNumber * maxInterval = requestJsonValueNotNull(jsonObject, @"maxInterval");
+   NSArray * dataVersionFiltersJson = [jsonObject objectForKey:@"dataVersionFilters"];
    NSNumber * keepSubscriptions = [jsonObject objectForKey:@"keepSubscriptions"];
    NSNumber * isFabricFiltered = [jsonObject objectForKey:@"isFabricFiltered"];
    NSNumber * imTimeoutMs = [jsonObject objectForKey:@"imTimeoutMs"];
    NSNumber * connectContext = [jsonObject objectForKey:@"connectContext"];
    NSNumber * eventMin = [jsonObject objectForKey:@"eventMin"];
+   // dataVersionFiltersJson is parsed and available for future SDK integration
    FlutterDeviceController *fdc = [controls objectForKey:handle];
    ZGMTRBaseDevice* baseDevice = getBaseDevice(fdc, nodeId, [connectContext isEqual:[NSNull null]] ? nil : connectContext);
    if (baseDevice == nil) {
@@ -942,7 +951,7 @@ static NSString * subscribe(NSString * params) {
    if (![eventPathsJson isEqual:[NSNull null]]) {
        eventPaths = [NSMutableArray array];
        for (NSUInteger i = 0; i < eventPathsJson.count; i++) {
-           NSDictionary * eventPath = eventPaths[i];
+           NSDictionary * eventPath = eventPathsJson[i];
            NSNumber * endpointId = [[eventPath objectForKey:@"endpointId"] objectForKey:@"id"];
            NSNumber * clusterId = [[eventPath objectForKey:@"clusterId"] objectForKey:@"id"];
            NSNumber * eventId = [[eventPath objectForKey:@"eventId"] objectForKey:@"id"];
@@ -994,11 +1003,13 @@ static NSString * readRequest(NSString * params) {
     NSString *callbackId = requestJsonValueNotNull(jsonObject, @"callbackHandle");
     NSNumber *nodeId = requestJsonValueNotNull(jsonObject, @"nodeId");
     NSArray * attributePathsJson = [jsonObject objectForKey:@"attributePaths"];
-    NSArray * eventPathsJson = [jsonObject objectForKey:@"eventPathsJson"];
+    NSArray * eventPathsJson = [jsonObject objectForKey:@"eventPaths"];
+    NSArray * dataVersionFiltersJson = [jsonObject objectForKey:@"dataVersionFilters"];
     NSNumber * isFabricFiltered = [jsonObject objectForKey:@"isFabricFiltered"];
     NSNumber * imTimeoutMs = [jsonObject objectForKey:@"imTimeoutMs"];
     NSNumber * connectContext = [jsonObject objectForKey:@"connectContext"];
     NSNumber * eventMin = [jsonObject objectForKey:@"eventMin"];
+    // dataVersionFiltersJson is parsed and available for future SDK integration
     
     FlutterDeviceController *fdc = [controls objectForKey:handle];
     ZGMTRBaseDevice* baseDevice = getBaseDevice(fdc, nodeId, [connectContext isEqual:[NSNull null]] ? nil : connectContext);
@@ -1021,7 +1032,7 @@ static NSString * readRequest(NSString * params) {
     if (![eventPathsJson isEqual:[NSNull null]]) {
         eventPaths = [NSMutableArray array];
         for (NSUInteger i = 0; i < eventPathsJson.count; i++) {
-            NSDictionary * eventPath = eventPaths[i];
+            NSDictionary * eventPath = eventPathsJson[i];
             NSNumber * endpointId = [[eventPath objectForKey:@"endpointId"] objectForKey:@"id"];
             NSNumber * clusterId = [[eventPath objectForKey:@"clusterId"] objectForKey:@"id"];
             NSNumber * eventId = [[eventPath objectForKey:@"eventId"] objectForKey:@"id"];
@@ -1244,7 +1255,7 @@ void onDeviceControlCall(NSString *path, NSString *params,
               } else if ([path isEqualToString:@"/setNocChainIssuer"]) {
                   resultData = setNocChainIssuer(params);
               } else if ([path isEqualToString:@"/setCompletionListener"]) {
-//                  resultData = setCompletionListener(params);
+                  resultData = setCompletionListener(params);
               } else if ([path isEqualToString:@"/publicKeyFromCSR"]) {
                   resultData = publicKeyFromCSR(params);
               } else if ([path isEqualToString:@"/onNOCChainGeneration"]) {

@@ -181,7 +181,6 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
 
   /// CompletionListener callback start ==================================
 
-   @override
   void onCloseBleComplete() {
     print('onCloseBleComplete');
   }
@@ -218,6 +217,11 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
   @override
   void onICDRegistrationInfoRequired() {
     print('onICDRegistrationInfoRequired');
+  }
+
+  @override
+  void onICDRegistrationComplete(int errorCode, ICDDeviceInfo? icdDeviceInfo) {
+    print('onICDRegistrationComplete errorCode=$errorCode icdDeviceInfo=$icdDeviceInfo');
   }
   
   @override

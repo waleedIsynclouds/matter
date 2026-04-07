@@ -1,6 +1,5 @@
 
 import 'dart:convert';
-import 'dart:ffi';
 import 'dart:io';
 import 'dart:typed_data';
 
@@ -13,6 +12,7 @@ import 'package:flutter_matter/src/constant.dart';
 import 'package:flutter_matter/src/utils.dart';
 
 import 'exception.dart';
+import 'model/icd_device_info.dart';
 import 'model/attribute_write_request.dart';
 import 'model/chip_attribute_path.dart';
 import 'model/chip_event_path.dart';
@@ -30,25 +30,55 @@ class WiFiCredentials {
   final String password;
 
   WiFiCredentials({required this.ssid, required this.password});
-
 }
 
-class NetworkCredentials implements TransportObject {
-  final WiFiCredentials wifiCredentials;
+/// Credentials for a Thread network. The [operationalDataset] is the
+/// Thread Active Operational Dataset encoded as a byte array (TLV).
+class ThreadCredentials {
+  final Uint8List operationalDataset;
 
-  NetworkCredentials({required this.wifiCredentials});
-  
+  ThreadCredentials({required this.operationalDataset});
+}
+
+/// Holds the network credentials for commissioning.
+/// Exactly one of [wifiCredentials] or [threadCredentials] must be set.
+class NetworkCredentials implements TransportObject {
+  final WiFiCredentials? wifiCredentials;
+  final ThreadCredentials? threadCredentials;
+
+  NetworkCredentials.wifi(WiFiCredentials wifi)
+      : wifiCredentials = wifi,
+        threadCredentials = null;
+
+  NetworkCredentials.thread(ThreadCredentials thread)
+      : wifiCredentials = null,
+        threadCredentials = thread;
+
+  /// Legacy constructor kept for backward compatibility — WiFi only.
+  NetworkCredentials({required WiFiCredentials wifiCredentials})
+      : wifiCredentials = wifiCredentials,
+        threadCredentials = null;
+
   @override
   String encode() {
     return jsonEncode(toJson());
   }
 
-  toJson() => {
-    'wifiCredentials': {
-      'ssid': wifiCredentials.ssid,
-      'password': wifiCredentials.password
+  toJson() {
+    if (threadCredentials != null) {
+      return {
+        'threadCredentials': {
+          'operationalDataset': List<int>.from(threadCredentials!.operationalDataset),
+        }
+      };
     }
-  };
+    return {
+      'wifiCredentials': {
+        'ssid': wifiCredentials!.ssid,
+        'password': wifiCredentials!.password,
+      }
+    };
+  }
 }
 
 class AttestationInfo {
@@ -183,9 +213,11 @@ abstract class CompletionListener {
   /// monitored subject) is required.
   void onICDRegistrationInfoRequired();
 
-  /// Notifies when the registration flow for the ICD completes
-  // TODO: implement
-  // void onICDRegistrationComplete(int errorCode, ICDDeviceInfo icdDeviceInfo);
+  /// Notifies when the registration flow for the ICD completes (Matter 1.2+).
+  ///
+  /// [errorCode] is 0 on success, non-zero on failure.
+  /// [icdDeviceInfo] contains the ICD device information on success; may be null on error.
+  void onICDRegistrationComplete(int errorCode, ICDDeviceInfo? icdDeviceInfo);
 }
 
 
@@ -608,6 +640,15 @@ class ChipDeviceController implements MethodCallHandler {
         case 'onICDRegistrationInfoRequired':
           _completionListener!.onICDRegistrationInfoRequired();
           return createPlatformCallSuccessResult();
+        case 'onICDRegistrationComplete':
+          _completionListener!.onICDRegistrationComplete(
+            checkCallArgNotNull(decodeArgs, 'errorCode'),
+            decodeArgs['icdDeviceInfo'] == null
+                ? null
+                : ICDDeviceInfo.fromJson(
+                    (decodeArgs['icdDeviceInfo'] as Map).cast<String, dynamic>()),
+          );
+          return createPlatformCallSuccessResult();
       }
     } 
     ////// DeviceAttestationDelegate //////
@@ -918,12 +959,16 @@ class ChipDeviceController implements MethodCallHandler {
     }));
   }
 
-  // Future<void> setCompletionListener(CompletionListener listener) async {
-  //   _completionListener = listener;
-  //   await _requestPlatform('setCompletionListener', jsonEncode({
-  //     jsonKeyHandle: _platformDeviceControllerHandle
-  //   }));
-  // }
+  /// Sets a [CompletionListener] to receive provisioning lifecycle callbacks.
+  ///
+  /// Prefer passing the listener directly to [pairDevice] when you have it
+  /// available; use this method if you need to update the listener separately.
+  Future<void> setCompletionListener(CompletionListener listener) async {
+    _completionListener = listener;
+    await _requestPlatform('setCompletionListener', jsonEncode({
+      jsonKeyHandle: _platformDeviceControllerHandle
+    }));
+  }
 
 
   /// when [attestationDelegate] notnull, [failSafeExpiryTimeoutSecs] efficient 
@@ -1106,13 +1151,44 @@ class ChipDeviceController implements MethodCallHandler {
     }
   }
 
+  /// Subscribes to the given attribute and/or event paths.
+  ///
+  /// This sets up an auto-resubscribing interaction for the specified paths.
+  /// Reports are delivered to [callback] as data is received and processed.
+  ///
+  /// [nodeId] is the target device node ID.
+  ///
+  /// [attributePaths] is the list of attribute paths to subscribe to.
+  ///
+  /// [eventPaths] is the list of event paths to subscribe to.
+  ///
+  /// [dataVersionFilters] is the list of data version filters used to suppress
+  /// unchanged cluster data. Currently this is supported on Android only.
+  ///
+  /// [minInterval] is the requested minimum reporting interval floor, in seconds.
+  ///
+  /// [maxInterval] is the requested maximum reporting interval ceiling, in seconds.
+  ///
+  /// If [keepSubscriptions] is `false`, all existing or pending subscriptions
+  /// on the publisher for this subscriber should be terminated.
+  ///
+  /// If [isFabricFiltered] is `true`, data inside fabric-scoped lists is limited
+  /// to the accessing fabric.
+  ///
+  /// [imTimeoutMs] overrides the default Interaction Model timeout in the native
+  /// layer when non-zero.
+  ///
+  /// [eventMin] filters queued events so only events with event numbers greater
+  /// than or equal to this value are reported.
+  ///
+  /// If provided, [connectContext] reuses an existing connected-device context
+  /// instead of resolving a new one for [nodeId].
   Future<void> subscribe(
     int nodeId, 
     SubscriptionCallback callback, 
-    // int devicePtr, 
     List<ChipAttributePath>? attributePaths, 
     List<ChipEventPath>? eventPaths, 
-    // List<DataVersionFilter>? dataVersionFilters, 
+    List<DataVersionFilter>? dataVersionFilters,
     int minInterval, 
     int maxInterval, 
     bool keepSubscriptions, 
@@ -1127,11 +1203,10 @@ class ChipDeviceController implements MethodCallHandler {
       await _requestPlatform('subscribe', jsonEncode({
         jsonKeyHandle: _platformDeviceControllerHandle,
         'nodeId': nodeId,
-        // 'devicePtr': devicePtr,
         'callbackHandle': callbackHandle,
         'attributePaths': attributePaths?.map((e) => e.toJson()).toList(),
         'eventPaths': eventPaths?.map((e) => e.toJson()).toList(),
-        // 'dataVersionFilters': dataVersionFilters?.map((e) => e.toJson()).toList(),
+        'dataVersionFilters': dataVersionFilters?.map((e) => e.toJson()).toList(),
         'minInterval': minInterval,
         'maxInterval': maxInterval,
         'keepSubscriptions': keepSubscriptions,
@@ -1146,6 +1221,31 @@ class ChipDeviceController implements MethodCallHandler {
     }
   }
 
+  /// Reads the given attribute and/or event paths.
+  ///
+  /// Reports are delivered to [callback] once the read response has been
+  /// received and processed.
+  ///
+  /// [nodeId] is the target device node ID.
+  ///
+  /// [attributePaths] is the list of attribute paths to read.
+  ///
+  /// [eventPaths] is the list of event paths to read.
+  ///
+  /// [dataVersionFilters] is the list of data version filters used to suppress
+  /// unchanged cluster data. Currently this is supported on Android only.
+  ///
+  /// If [isFabricFiltered] is `true`, data inside fabric-scoped lists is limited
+  /// to the accessing fabric.
+  ///
+  /// [imTimeoutMs] overrides the default Interaction Model timeout in the native
+  /// layer when non-zero.
+  ///
+  /// [eventMin] filters queued events so only events with event numbers greater
+  /// than or equal to this value are returned.
+  ///
+  /// If provided, [connectContext] reuses an existing connected-device context
+  /// instead of resolving a new one for [nodeId].
   Future<void> read(
     int nodeId, 
     ReportCallback callback, 
@@ -1253,18 +1353,6 @@ class ChipDeviceController implements MethodCallHandler {
     }
     return false;
   }
-
-  // Future<bool> unPairDevice(int nodeId) async {
-  //   try {  
-  //     final result = await _requestPlatform('unPairDevice', jsonEncode({
-  //       jsonKeyHandle: _platformDeviceControllerHandle,
-  //       'nodeId': nodeId,
-  //     }));
-  //     return result?['data'] == true;
-  //   } catch (e) {
-  //     return false;
-  //   }
-  // }
 
   Future<int?> getFabricIndex() async {
     try {

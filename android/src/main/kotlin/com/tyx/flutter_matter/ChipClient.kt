@@ -15,7 +15,7 @@
  *   limitations under the License.
  *
  */
-package com.zengge.flutter_matter
+package com.tyx.flutter_matter
 
 import android.content.Context
 import chip.devicecontroller.ChipDeviceController

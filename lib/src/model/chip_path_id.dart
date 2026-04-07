@@ -7,6 +7,7 @@ class ChipPathId {
   final int id;
   final IdType type;
 
+  // ignore: unused_element
   ChipPathId._({required this.id, required this.type});
 
   ChipPathId.forId(this.id) :

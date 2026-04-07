@@ -1,4 +1,4 @@
-group 'com.zengge.flutter_matter'
+group 'com.tyx.flutter_matter'
 version '1.0-SNAPSHOT'
 
 buildscript {
@@ -27,7 +27,7 @@ apply plugin: 'kotlin-android'
 
 android {
     if (project.android.hasProperty("namespace")) {
-        namespace 'com.zengge.flutter_matter'
+        namespace 'com.tyx.flutter_matter'
     }
 
     compileSdk 34

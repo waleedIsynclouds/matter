@@ -1,5 +1,4 @@
 
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_matter/flutter_matter.dart';
 import 'package:flutter_matter_example/device_provisioning.dart';

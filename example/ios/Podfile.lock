@@ -70,15 +70,16 @@ PODS:
   - permission_handler_apple (9.3.0):
     - Flutter
   - PromisesObjC (2.4.0)
-  - Protobuf (3.29.3)
+  - Protobuf (3.29.5)
   - reactive_ble_mobile (0.0.1):
     - Flutter
+    - FlutterMacOS
     - Protobuf (~> 3.5)
     - SwiftProtobuf (~> 1.0)
   - shared_preferences_foundation (0.0.1):
     - Flutter
     - FlutterMacOS
-  - SwiftProtobuf (1.28.2)
+  - SwiftProtobuf (1.31.1)
   - Toast (4.1.1)
 
 DEPENDENCIES:
@@ -91,7 +92,7 @@ DEPENDENCIES:
   - mobile_scanner (from `.symlinks/plugins/mobile_scanner/ios`)
   - path_provider_foundation (from `.symlinks/plugins/path_provider_foundation/darwin`)
   - permission_handler_apple (from `.symlinks/plugins/permission_handler_apple/ios`)
-  - reactive_ble_mobile (from `.symlinks/plugins/reactive_ble_mobile/ios`)
+  - reactive_ble_mobile (from `.symlinks/plugins/reactive_ble_mobile/darwin`)
   - shared_preferences_foundation (from `.symlinks/plugins/shared_preferences_foundation/darwin`)
 
 SPEC REPOS:
@@ -132,7 +133,7 @@ EXTERNAL SOURCES:
   permission_handler_apple:
     :path: ".symlinks/plugins/permission_handler_apple/ios"
   reactive_ble_mobile:
-    :path: ".symlinks/plugins/reactive_ble_mobile/ios"
+    :path: ".symlinks/plugins/reactive_ble_mobile/darwin"
   shared_preferences_foundation:
     :path: ".symlinks/plugins/shared_preferences_foundation/darwin"
 
@@ -158,10 +159,10 @@ SPEC CHECKSUMS:
   path_provider_foundation: 2b6b4c569c0fb62ec74538f866245ac84301af46
   permission_handler_apple: 9878588469a2b0d0fc1e048d9f43605f92e6cec2
   PromisesObjC: f5707f49cb48b9636751c5b2e7d227e43fba9f47
-  Protobuf: e2de96d939c642ce8da186343ff8929b35223212
-  reactive_ble_mobile: 9ce6723d37ccf701dbffd202d487f23f5de03b4c
+  Protobuf: 164aea2ae380c3951abdc3e195220c01d17400e0
+  reactive_ble_mobile: 856183aeda09f2a676bbaecbea8915c3cb1d33df
   shared_preferences_foundation: fcdcbc04712aee1108ac7fda236f363274528f78
-  SwiftProtobuf: 4dbaffec76a39a8dc5da23b40af1a5dc01a4c02d
+  SwiftProtobuf: e02f51c8c2df5845657aee2d4de9d61bf50ef788
   Toast: 1f5ea13423a1e6674c4abdac5be53587ae481c4e
 
 PODFILE CHECKSUM: a57f30d18f102dd3ce366b1d62a55ecbef2158e5

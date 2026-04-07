@@ -1,4 +1,4 @@
-package com.zengge.flutter_matter
+package com.tyx.flutter_matter
 
 import android.os.Looper
 import android.util.Log
@@ -28,6 +28,7 @@ import chip.devicecontroller.model.ChipAttributePath
 import chip.devicecontroller.model.ChipEventPath
 import chip.devicecontroller.model.ChipPathId
 import chip.devicecontroller.model.ClusterState
+import chip.devicecontroller.model.DataVersionFilter
 import chip.devicecontroller.model.EndpointState
 import chip.devicecontroller.model.EventState
 import chip.devicecontroller.model.InvokeElement
@@ -82,7 +83,7 @@ private fun ICDDeviceInfo.toJSONObject(): JSONObject {
     return JSONObject(mapOf(
         "symmetricKey" to JSONArray(symmetricKey.nullToEmpty()),
         "userActiveModeTriggerHint" to JSONArray(userActiveModeTriggerHint.map { it.bitIndex }),
-        "userActiveModeTriggerInstruction" to JSONArray(userActiveModeTriggerInstruction),
+        "userActiveModeTriggerInstruction" to userActiveModeTriggerInstruction,
         "icdNodeId" to icdNodeId,
         "icdCounter" to icdCounter,
         "monitoredSubject" to monitoredSubject,
@@ -240,9 +241,6 @@ fun onDeviceControlCall(path: String, params: String, result: MethodChannel.Resu
                 }
                 "/openPairingWindowWithPIN" -> {
                     callResultSuccess(openPairingWindowWithPIN(params))
-                }
-                "/unPairDevice" -> {
-                    callResultSuccess(unPairDevice(params))
                 }
                 "/getFabricIndex" -> {
                     callResultSuccess(getFabricIndex(params))
@@ -916,7 +914,7 @@ fun subscribe(params: String): String {
     val callbackHandle = jsonObject.optNotNull("callbackHandle").toString()
     val attributePathsJson = jsonObject.optJSONArray("attributePaths")
     val eventPathsJson = jsonObject.optJSONArray("eventPaths")
-//    val dataVersionFilters = jsonObject.opt("dataVersionFilters")
+    val dataVersionFiltersJson = jsonObject.optJSONArray("dataVersionFilters")
     val minInterval = jsonObject.opt("minInterval")?.toString()?.toIntOrNull()
     val maxInterval = jsonObject.opt("maxInterval")?.toString()?.toIntOrNull()
     val keepSubscriptions = jsonObject.opt("keepSubscriptions") == true
@@ -937,6 +935,23 @@ fun subscribe(params: String): String {
         eventPaths = ArrayList()
         for (i in 0 until eventPathsJson.length()) {
             eventPaths.add(mapChipEventPath(eventPathsJson.optJSONObject(i)))
+        }
+    }
+    var dataVersionFilters: ArrayList<DataVersionFilter>? = null
+    if (dataVersionFiltersJson != null && dataVersionFiltersJson != JSONObject.NULL) {
+        dataVersionFilters = ArrayList()
+        for (i in 0 until dataVersionFiltersJson.length()) {
+            val obj = dataVersionFiltersJson.optJSONObject(i)
+            val endpointId = obj.optJSONObject("endpointId")
+            val clusterId = obj.optJSONObject("clusterId")
+            val dataVersion = obj.optLong("dataVersion")
+            dataVersionFilters.add(
+                DataVersionFilter.newInstance(
+                    ChipPathId.forId(endpointId.optLong("id")),
+                    ChipPathId.forId(clusterId.optLong("id")),
+                    dataVersion
+                )
+            )
         }
     }
 
@@ -1003,6 +1018,7 @@ fun subscribe(params: String): String {
                     devicePointer,
                     attributePaths,
                     eventPaths,
+                    dataVersionFilters,
                     minInterval ?: 0,
                     maxInterval ?: 0,
                     keepSubscriptions,
@@ -1033,6 +1049,7 @@ fun subscribe(params: String): String {
             connectDevicePointer.toString().toLong(),
             attributePaths,
             eventPaths,
+            dataVersionFilters,
             minInterval ?: 0,
             maxInterval ?: 0,
             keepSubscriptions,
@@ -1054,7 +1071,7 @@ fun read(params: String): String {
     val attributePathsJson = jsonObject.optJSONArray("attributePaths")
     val eventPathsJson = jsonObject.optJSONArray("eventPaths")
     val connectDevicePointer = jsonObject.opt("connectContext")
-//    val dataVersionFilters = jsonObject.opt("dataVersionFilters")
+    val dataVersionFiltersJson = jsonObject.optJSONArray("dataVersionFilters")
     val isFabricFiltered = jsonObject.opt("isFabricFiltered") == true
     val imTimeoutMs = jsonObject.opt("imTimeoutMs")?.toString()?.toIntOrNull()
     val eventMin = jsonObject.opt("eventMin")?.toString()?.toLongOrNull()
@@ -1071,6 +1088,23 @@ fun read(params: String): String {
         eventPaths = ArrayList()
         for (i in 0 until eventPathsJson.length()) {
             eventPaths.add(mapChipEventPath(eventPathsJson.optJSONObject(i)))
+        }
+    }
+    var dataVersionFilters: ArrayList<DataVersionFilter>? = null
+    if (dataVersionFiltersJson != null && dataVersionFiltersJson != JSONObject.NULL) {
+        dataVersionFilters = ArrayList()
+        for (i in 0 until dataVersionFiltersJson.length()) {
+            val obj = dataVersionFiltersJson.optJSONObject(i)
+            val endpointId = obj.optJSONObject("endpointId")
+            val clusterId = obj.optJSONObject("clusterId")
+            val dataVersion = obj.optLong("dataVersion")
+            dataVersionFilters.add(
+                DataVersionFilter.newInstance(
+                    ChipPathId.forId(endpointId.optLong("id")),
+                    ChipPathId.forId(clusterId.optLong("id")),
+                    dataVersion
+                )
+            )
         }
     }
     val reportCallback = object : ReportCallback {

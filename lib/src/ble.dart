@@ -1,7 +1,6 @@
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/widgets.dart';
 import 'package:flutter_matter/flutter_matter_method_channel.dart';
 import 'package:flutter_matter/flutter_matter_platform_interface.dart';
 import 'package:flutter_matter/src/constant.dart';
@@ -358,7 +357,7 @@ class BLELayerPlatform {
 
   static Future<bool> handleSubscribeReceived(
       dynamic connObj, Uint8List svcId, Uint8List charId) async {
-        final result = await _requestPlatform(
+        await _requestPlatform(
           'handleSubscribeReceived', jsonEncode({
             'connObj': connObj,
             'svcId': List.from(svcId),
@@ -370,8 +369,7 @@ class BLELayerPlatform {
 
   static Future<bool> handleSubscribeComplete(
       dynamic connObj, Uint8List svcId, Uint8List charId, bool success) async {
-        
-        final result = await _requestPlatform(
+        await _requestPlatform(
           'handleSubscribeComplete', jsonEncode({
             'connObj': connObj,
             'svcId': List.from(svcId),
@@ -387,7 +385,7 @@ class BLELayerPlatform {
   ///   characteristic is canceled.
   static Future<bool> handleUnsubscribeReceived(
       dynamic connObj, Uint8List svcId, Uint8List charId) async {
-      final result = await _requestPlatform(
+      await _requestPlatform(
         'handleUnsubscribeReceived', jsonEncode({
           'connObj': connObj,
           'svcId': List.from(svcId),
@@ -400,7 +398,7 @@ class BLELayerPlatform {
   /// Call when a GATT unsubscribe request succeeds.
   static Future<bool> handleUnsubscribeComplete(
       dynamic connObj, Uint8List svcId, Uint8List charId, bool success) async {
-    final result = await _requestPlatform(
+    await _requestPlatform(
       'handleUnsubscribeComplete', jsonEncode({
         'connObj': connObj,
         'svcId': List.from(svcId),
@@ -428,7 +426,7 @@ class BLELayerPlatform {
   /// Call when a GATT indication is received.
   static Future<bool> handleIndicationReceived(
       dynamic connObj, Uint8List svcId, Uint8List charId, Uint8List pBuf) async {
-    final result = await _requestPlatform(
+    await _requestPlatform(
       'handleIndicationReceived', jsonEncode({
         'connObj': connObj,
         'svcId': List.from(svcId),
@@ -442,7 +440,7 @@ class BLELayerPlatform {
   /// Call when an outstanding GATT write request receives a positive receipt confirmation.
   static Future<bool> handleWriteConfirmation(
       dynamic connObj, Uint8List svcId, Uint8List charId, bool success) async {
-    final result = await _requestPlatform(
+    await _requestPlatform(
       'handleWriteConfirmation', jsonEncode({
         'connObj': connObj,
         'svcId': List.from(svcId),
@@ -456,7 +454,7 @@ class BLELayerPlatform {
   /// Call when an outstanding GATT indication receives a positive receipt confirmation.
   static Future<bool> handleIndicationConfirmation(
       dynamic connObj, Uint8List svcId, Uint8List charId, bool success) async {
-    final result = await _requestPlatform(
+    await _requestPlatform(
       'handleIndicationConfirmation', jsonEncode({
         'connObj': connObj,
         'svcId': List.from(svcId),

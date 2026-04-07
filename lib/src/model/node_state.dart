@@ -1,5 +1,3 @@
-import 'dart:collection';
-
 import 'endpoint_state.dart';
 
 class NodeState {

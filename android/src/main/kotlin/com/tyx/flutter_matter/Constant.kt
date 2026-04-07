@@ -1,4 +1,4 @@
-package com.zengge.flutter_matter
+package com.tyx.flutter_matter
 
 const val deviceControllerHost = "devicecontroller"
 const val bleHost = "ble"

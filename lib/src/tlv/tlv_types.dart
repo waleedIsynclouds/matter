@@ -1,5 +1,3 @@
-import 'dart:typed_data';
-
 const MODIFIED_TYPE_MASK = 28;
 const ELEMENT_TYPE_MASK = 31;
 const SIGNED_INT_TYPE = 0;

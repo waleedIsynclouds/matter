@@ -1,4 +1,4 @@
-package com.zengge.flutter_matter
+package com.tyx.flutter_matter
 
 import android.util.Base64
 import chip.devicecontroller.AttestationTrustStoreDelegate

@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
 import 'package:flutter_matter/flutter_matter.dart';
 import 'package:hex/hex.dart';
 import 'package:pem/pem.dart';

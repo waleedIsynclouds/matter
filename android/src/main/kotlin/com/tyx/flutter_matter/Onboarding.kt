@@ -1,4 +1,4 @@
-package com.zengge.flutter_matter
+package com.tyx.flutter_matter
 
 import io.flutter.plugin.common.MethodChannel
 import matter.onboardingpayload.OnboardingPayloadParser

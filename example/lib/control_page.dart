@@ -281,13 +281,14 @@ class _OnOffPageState extends State<OnOffPage> {
           clusterId: ChipPathId.forId(clusterId),
         )
       ],
-      null,
-      3,
-      8,
-      true,
-      false,
-      6000,
-      0,
+      null, // eventPaths
+      null, // dataVersionFilters
+      3,    // minInterval
+      8,    // maxInterval
+      true, // keepSubscriptions
+      false, // isFabricFiltered
+      6000, // imTimeoutMs
+      0,    // eventMin
     );
   }
 
@@ -363,7 +364,7 @@ class OCWTabPage extends StatelessWidget {
                 tlvWriter.endStructure();
                 final invokeElement = InvokeElement.create(
                     0, 0x0000003C, 0x00000002, tlvWriter.getEncoded(), null);
-                chipDeviceController!.invoke(
+                chipDeviceController.invoke(
                     InvokeCallbackWarp(
                       onDoneCB: () {
                         chipDeviceController

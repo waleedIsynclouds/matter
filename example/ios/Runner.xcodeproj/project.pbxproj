@@ -3,7 +3,7 @@
 	archiveVersion = 1;
 	classes = {
 	};
-	objectVersion = 70;
+	objectVersion = 54;
 	objects = {
 
 /* Begin PBXBuildFile section */
@@ -16,7 +16,7 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-		DAE48D0F2DC2721B00351E21 /* MatterExt.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DAE48D082DC2721B00351E21 /* MatterExt.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
+		DA12A8C02F08F50900A2FBEC /* MatterExt.appex in Embed Foundation Extensions */ = {isa = PBXBuildFile; fileRef = DA12A8B92F08F50900A2FBEC /* MatterExt.appex */; settings = {ATTRIBUTES = (RemoveHeadersOnCopy, ); }; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -27,11 +27,11 @@
 			remoteGlobalIDString = 97C146ED1CF9000F007C117D;
 			remoteInfo = Runner;
 		};
-		DAE48D0D2DC2721B00351E21 /* PBXContainerItemProxy */ = {
+		DA12A8BE2F08F50900A2FBEC /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 97C146E61CF9000F007C117D /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = DAE48D072DC2721B00351E21;
+			remoteGlobalIDString = DA12A8B82F08F50900A2FBEC;
 			remoteInfo = MatterExt;
 		};
 /* End PBXContainerItemProxy section */
@@ -53,7 +53,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 13;
 			files = (
-				DAE48D0F2DC2721B00351E21 /* MatterExt.appex in Embed Foundation Extensions */,
+				DA12A8C02F08F50900A2FBEC /* MatterExt.appex in Embed Foundation Extensions */,
 			);
 			name = "Embed Foundation Extensions";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -81,26 +81,36 @@
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		A12DC43F250800113B8AACA0 /* Pods-RunnerTests.profile.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.profile.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.profile.xcconfig"; sourceTree = "<group>"; };
-		DA0BD1142D8715EB002C592D /* MatterExt.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MatterExt.appex; sourceTree = BUILT_PRODUCTS_DIR; };
+		DA12A8B92F08F50900A2FBEC /* MatterExt.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MatterExt.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		DA24EDAE2D55063600DB92A2 /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		DAE48D082DC2721B00351E21 /* MatterExt.appex */ = {isa = PBXFileReference; explicitFileType = "wrapper.app-extension"; includeInIndex = 0; path = MatterExt.appex; sourceTree = BUILT_PRODUCTS_DIR; };
 		E6B072E41AE477EC861C25DE /* Pods-RunnerTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-RunnerTests.debug.xcconfig"; path = "Target Support Files/Pods-RunnerTests/Pods-RunnerTests.debug.xcconfig"; sourceTree = "<group>"; };
 		E8144762628487DE69DFC70D /* Pods-Runner.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release.xcconfig"; sourceTree = "<group>"; };
 		FF173A8D3E6E4C13B6302C7D /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFileSystemSynchronizedBuildFileExceptionSet section */
-		DAE48D132DC2721B00351E21 /* PBXFileSystemSynchronizedBuildFileExceptionSet */ = {
+		DA12A8C42F08F50900A2FBEC /* Exceptions for "MatterExt" folder in "MatterExt" target */ = {
 			isa = PBXFileSystemSynchronizedBuildFileExceptionSet;
 			membershipExceptions = (
 				Info.plist,
 			);
-			target = DAE48D072DC2721B00351E21 /* MatterExt */;
+			target = DA12A8B82F08F50900A2FBEC /* MatterExt */;
 		};
 /* End PBXFileSystemSynchronizedBuildFileExceptionSet section */
 
 /* Begin PBXFileSystemSynchronizedRootGroup section */
-		DAE48D092DC2721B00351E21 /* MatterExt */ = {isa = PBXFileSystemSynchronizedRootGroup; exceptions = (DAE48D132DC2721B00351E21 /* PBXFileSystemSynchronizedBuildFileExceptionSet */, ); explicitFileTypes = {}; explicitFolders = (); path = MatterExt; sourceTree = "<group>"; };
+		DA12A8BA2F08F50900A2FBEC /* MatterExt */ = {
+			isa = PBXFileSystemSynchronizedRootGroup;
+			exceptions = (
+				DA12A8C42F08F50900A2FBEC /* Exceptions for "MatterExt" folder in "MatterExt" target */,
+			);
+			explicitFileTypes = {
+			};
+			explicitFolders = (
+			);
+			path = MatterExt;
+			sourceTree = "<group>";
+		};
 /* End PBXFileSystemSynchronizedRootGroup section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -120,7 +130,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE48D052DC2721B00351E21 /* Frameworks */ = {
+		DA12A8B62F08F50900A2FBEC /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -176,7 +186,7 @@
 			children = (
 				9740EEB11CF90186004384FC /* Flutter */,
 				97C146F01CF9000F007C117D /* Runner */,
-				DAE48D092DC2721B00351E21 /* MatterExt */,
+				DA12A8BA2F08F50900A2FBEC /* MatterExt */,
 				97C146EF1CF9000F007C117D /* Products */,
 				331C8082294A63A400263BE5 /* RunnerTests */,
 				649C084E99CFA7707CAB9C33 /* Pods */,
@@ -189,7 +199,7 @@
 			children = (
 				97C146EE1CF9000F007C117D /* Runner.app */,
 				331C8081294A63A400263BE5 /* RunnerTests.xctest */,
-				DAE48D082DC2721B00351E21 /* MatterExt.appex */,
+				DA12A8B92F08F50900A2FBEC /* MatterExt.appex */,
 			);
 			name = Products;
 			sourceTree = "<group>";
@@ -250,33 +260,31 @@
 			buildRules = (
 			);
 			dependencies = (
-				DAE48D0E2DC2721B00351E21 /* PBXTargetDependency */,
+				DA12A8BF2F08F50900A2FBEC /* PBXTargetDependency */,
 			);
 			name = Runner;
 			productName = Runner;
 			productReference = 97C146EE1CF9000F007C117D /* Runner.app */;
 			productType = "com.apple.product-type.application";
 		};
-		DAE48D072DC2721B00351E21 /* MatterExt */ = {
+		DA12A8B82F08F50900A2FBEC /* MatterExt */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = DAE48D142DC2721B00351E21 /* Build configuration list for PBXNativeTarget "MatterExt" */;
+			buildConfigurationList = DA12A8C52F08F50900A2FBEC /* Build configuration list for PBXNativeTarget "MatterExt" */;
 			buildPhases = (
-				DAE48D042DC2721B00351E21 /* Sources */,
-				DAE48D052DC2721B00351E21 /* Frameworks */,
-				DAE48D062DC2721B00351E21 /* Resources */,
+				DA12A8B52F08F50900A2FBEC /* Sources */,
+				DA12A8B62F08F50900A2FBEC /* Frameworks */,
+				DA12A8B72F08F50900A2FBEC /* Resources */,
 			);
 			buildRules = (
 			);
 			dependencies = (
 			);
 			fileSystemSynchronizedGroups = (
-				DAE48D092DC2721B00351E21 /* MatterExt */,
+				DA12A8BA2F08F50900A2FBEC /* MatterExt */,
 			);
 			name = MatterExt;
-			packageProductDependencies = (
-			);
 			productName = MatterExt;
-			productReference = DAE48D082DC2721B00351E21 /* MatterExt.appex */;
+			productReference = DA12A8B92F08F50900A2FBEC /* MatterExt.appex */;
 			productType = "com.apple.product-type.app-extension";
 		};
 /* End PBXNativeTarget section */
@@ -286,7 +294,7 @@
 			isa = PBXProject;
 			attributes = {
 				BuildIndependentTargetsInParallel = YES;
-				LastSwiftUpdateCheck = 1600;
+				LastSwiftUpdateCheck = 1640;
 				LastUpgradeCheck = 1510;
 				ORGANIZATIONNAME = "";
 				TargetAttributes = {
@@ -298,8 +306,8 @@
 						CreatedOnToolsVersion = 7.3.1;
 						LastSwiftMigration = 1100;
 					};
-					DAE48D072DC2721B00351E21 = {
-						CreatedOnToolsVersion = 16.0;
+					DA12A8B82F08F50900A2FBEC = {
+						CreatedOnToolsVersion = 16.4;
 					};
 				};
 			};
@@ -318,7 +326,7 @@
 			targets = (
 				97C146ED1CF9000F007C117D /* Runner */,
 				331C8080294A63A400263BE5 /* RunnerTests */,
-				DAE48D072DC2721B00351E21 /* MatterExt */,
+				DA12A8B82F08F50900A2FBEC /* MatterExt */,
 			);
 		};
 /* End PBXProject section */
@@ -342,7 +350,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE48D062DC2721B00351E21 /* Resources */ = {
+		DA12A8B72F08F50900A2FBEC /* Resources */ = {
 			isa = PBXResourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -481,7 +489,7 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		DAE48D042DC2721B00351E21 /* Sources */ = {
+		DA12A8B52F08F50900A2FBEC /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -496,10 +504,10 @@
 			target = 97C146ED1CF9000F007C117D /* Runner */;
 			targetProxy = 331C8085294A63A400263BE5 /* PBXContainerItemProxy */;
 		};
-		DAE48D0E2DC2721B00351E21 /* PBXTargetDependency */ = {
+		DA12A8BF2F08F50900A2FBEC /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
-			target = DAE48D072DC2721B00351E21 /* MatterExt */;
-			targetProxy = DAE48D0D2DC2721B00351E21 /* PBXContainerItemProxy */;
+			target = DA12A8B82F08F50900A2FBEC /* MatterExt */;
+			targetProxy = DA12A8BE2F08F50900A2FBEC /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
 
@@ -809,7 +817,7 @@
 			};
 			name = Release;
 		};
-		DAE48D102DC2721B00351E21 /* Debug */ = {
+		DA12A8C12F08F50900A2FBEC /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -828,7 +836,7 @@
 				INFOPLIST_FILE = MatterExt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MatterExt;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -849,7 +857,7 @@
 			};
 			name = Debug;
 		};
-		DAE48D112DC2721B00351E21 /* Release */ = {
+		DA12A8C22F08F50900A2FBEC /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -868,7 +876,7 @@
 				INFOPLIST_FILE = MatterExt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MatterExt;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -886,7 +894,7 @@
 			};
 			name = Release;
 		};
-		DAE48D122DC2721B00351E21 /* Profile */ = {
+		DA12A8C32F08F50900A2FBEC /* Profile */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
@@ -905,7 +913,7 @@
 				INFOPLIST_FILE = MatterExt/Info.plist;
 				INFOPLIST_KEY_CFBundleDisplayName = MatterExt;
 				INFOPLIST_KEY_NSHumanReadableCopyright = "";
-				IPHONEOS_DEPLOYMENT_TARGET = 18.0;
+				IPHONEOS_DEPLOYMENT_TARGET = 18.5;
 				LD_RUNPATH_SEARCH_PATHS = (
 					"$(inherited)",
 					"@executable_path/Frameworks",
@@ -956,12 +964,12 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		DAE48D142DC2721B00351E21 /* Build configuration list for PBXNativeTarget "MatterExt" */ = {
+		DA12A8C52F08F50900A2FBEC /* Build configuration list for PBXNativeTarget "MatterExt" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
-				DAE48D102DC2721B00351E21 /* Debug */,
-				DAE48D112DC2721B00351E21 /* Release */,
-				DAE48D122DC2721B00351E21 /* Profile */,
+				DA12A8C12F08F50900A2FBEC /* Debug */,
+				DA12A8C22F08F50900A2FBEC /* Release */,
+				DA12A8C32F08F50900A2FBEC /* Profile */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
