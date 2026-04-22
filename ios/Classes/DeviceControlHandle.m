@@ -588,7 +588,7 @@ static NSString *continueCommissioning(NSString *params) {
     id ignoreAttestationFailureValue = [jsonObject objectForKey:@"ignoreAttestationFailure"];
     NSError *error = nil;
     BOOL success = [deviceController continueCommissioningDevice:(void*)[devicePtr unsignedLongValue] ignoreAttestationFailure:[ignoreAttestationFailureValue isKindOfClass:[NSNumber class]] ? [ignoreAttestationFailureValue boolValue] : NO error:&error];
-    return createFlutterRequestResultWithCode(success ? 1 : 0, @{});
+    return createFlutterRequestResultWithCode(success ? 0 : 1, @{});
 }
 
 static NSString *createOperationalCertificate(NSString *params) {
@@ -1207,7 +1207,7 @@ static NSString * openPairingWindowWithPIN(NSString * params) {
         }
     }];
     
-    return createFlutterRequestResultWithCode(0, @{});
+    return createFlutterRequestResultWithCode(0, @{@"data": @(YES)});
 }
 
 static NSString * getFabricIndex(NSString * params) {
