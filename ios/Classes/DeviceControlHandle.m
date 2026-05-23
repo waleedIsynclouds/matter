@@ -635,7 +635,8 @@ static NSString *pairDevice(NSString *params) {
         NSDictionary *wifiCredentials = [networkCredentials objectForKey:@"wifiCredentials"];
         if (wifiCredentials != nil && ![wifiCredentials isEqual:[NSNull null]]) {
             ssid = [wifiCredentials objectForKey:@"ssid"];
-            pwd = [wifiCredentials objectForKey:@"password"];
+            id wifiPassword = [wifiCredentials objectForKey:@"password"];
+            pwd = (wifiPassword == nil || [wifiPassword isEqual:[NSNull null]]) ? @"" : wifiPassword;
         }
         NSDictionary *threadCredentials = [networkCredentials objectForKey:@"threadCredentials"];
         if (threadCredentials != nil && ![threadCredentials isEqual:[NSNull null]]) {
@@ -662,8 +663,9 @@ static NSString *pairDevice(NSString *params) {
                 ZGMTRCommissioningParameters * commissioningParams = [[ZGMTRCommissioningParameters alloc] init];
                 commissioningParams.failSafeTimeout = @([fcp failsafeTimerSeconds]);
                 commissioningParams.skipCommissioningComplete = [fcp skipCommissioningComplete];
-                if (ssid != nil && pwd != nil) {
+                if (ssid != nil) {
                     commissioningParams.wifiSSID = [ssid dataUsingEncoding:NSUTF8StringEncoding];
+                    // Matter allows empty Wi-Fi credentials for open networks.
                     commissioningParams.wifiCredentials = [pwd dataUsingEncoding:NSUTF8StringEncoding];
                 } else if (threadOperationalDataset != nil) {
                     commissioningParams.threadOperationalDataset = threadOperationalDataset;

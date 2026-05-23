@@ -1,3 +1,15 @@
+## 0.0.10
+
+### Improvements
+- **Open Wi-Fi commissioning support** — `WiFiCredentials.password` now supports empty-string values for open networks. The Dart API keeps serializing the password field, and both Android and iOS native commissioning paths now accept an empty password when an SSID is provided.
+- **iOS example SSID autofill** — The example app now attempts to read the currently connected iPhone Wi-Fi SSID during onboarding and, when available, skips the manual `WifiInputPage` and starts provisioning with that SSID and an empty password. If the SSID cannot be read, the example falls back to the manual Wi-Fi input flow.
+
+## 0.0.9
+
+### Changes
+- Simplified the example app by removing the Linux, macOS, Windows, and Web targets, keeping the maintained mobile example flow focused.
+- Renamed the example Android application package from `com.zengge.example` to `com.fluttermatter.example`.
+
 ## 0.0.8
 
 ### New Features

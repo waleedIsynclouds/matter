@@ -92,6 +92,16 @@ private fun ICDDeviceInfo.toJSONObject(): JSONObject {
     ))
 }
 
+internal fun parseWiFiCredentialsFromJson(wifiCredentialsJSONObject: JSONObject?): WiFiCredentials? {
+    if (wifiCredentialsJSONObject == null) {
+        return null
+    }
+    return WiFiCredentials(
+        wifiCredentialsJSONObject.optNotNull("ssid").toString(),
+        wifiCredentialsJSONObject.optString("password", ""),
+    )
+}
+
 class KeypairDelegateWarp(
     private val handle: String
 ): KeypairDelegate {
@@ -686,13 +696,7 @@ fun pairDevice(params: String): String {
     val wifiCredentialsJSONObject = networkCredentialsJsonObject?.optJSONObject("wifiCredentials")
     val threadCredentialsJSONObject = networkCredentialsJsonObject?.optJSONObject("threadCredentials")
     val completionListenerHandle = jsonObject.optString("completionListener")
-    var wifiCredentials: WiFiCredentials? = null
-    if (wifiCredentialsJSONObject != null) {
-        wifiCredentials = WiFiCredentials(
-            wifiCredentialsJSONObject.optNotNull("ssid").toString(),
-            wifiCredentialsJSONObject.optNotNull("password").toString(),
-        )
-    }
+    val wifiCredentials = parseWiFiCredentialsFromJson(wifiCredentialsJSONObject)
     var threadCredentials: ThreadCredentials? = null
     if (threadCredentialsJSONObject != null) {
         threadCredentials = ThreadCredentials(threadCredentialsJSONObject.optJSONArray("operationalDataset").toByteArray())
