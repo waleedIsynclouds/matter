@@ -28,12 +28,46 @@ import kotlinx.coroutines.suspendCancellableCoroutine
 import kotlinx.coroutines.withTimeoutOrNull
 
 @SuppressLint("MissingPermission")
+/*
+ * Matter BLE connection flow in this plugin:
+ *
+ * 1. Flutter parses the QR/manual onboarding payload and gets the discriminator.
+ * 2. Flutter calls BLEManager.connect(), which reaches BLE.kt -> connectDevice().
+ * 3. connectDevice() creates BluetoothManager and calls getBluetoothDevice().
+ * 4. getBluetoothDevice() starts an Android BLE scan filtered by the Matter
+ *    service UUID and discriminator from the onboarding payload.
+ * 5. When a matching peripheral is found, connect() opens an Android
+ *    BluetoothGatt connection to it.
+ * 6. connect() registers that BluetoothGatt with AndroidChipPlatform.bleManager
+ *    using addConnection(). The returned integer is the Matter BLE connId.
+ * 7. Android GATT events are forwarded into Matter's wrapped BLE callback:
+ *    connection state, service discovery, MTU changes, characteristic writes,
+ *    descriptor writes, and incoming characteristic changes.
+ * 8. After services are discovered, the code requests MTU 247. When MTU
+ *    negotiation completes, connect() resumes and returns the connId to Flutter.
+ * 9. Flutter passes this connId to ChipDeviceController.pairDevice().
+ * 10. During commissioning, Matter's BLE layer asks ZGAndroidBleManager to:
+ *     - subscribe to the device's Matter/BTP characteristic so responses arrive,
+ *     - write BTP packets to the device with onSendWriteRequest(),
+ *     - close/unsubscribe when commissioning or the BLE session ends.
+ *
+ * The app code does not manually build Matter commissioning packets here. This
+ * file only discovers the BLE peripheral, registers the GATT connection with
+ * Matter, and forwards Android BLE events/operations between Android and the
+ * Matter SDK.
+ */
 class BluetoothManager : BleCallback {
   private val bluetoothAdapter = BluetoothAdapter.getDefaultAdapter()
   private var bleGatt: BluetoothGatt? = null
+  // Matter's Android BLE manager assigns this handle when the Android GATT
+  // connection is registered. Flutter later passes it into pairDevice().
   var connectionId = 0
     private set
 
+  /**
+   * Builds the Matter BLE advertisement service data used to match a device by
+   * discriminator during commissioning discovery.
+   */
   private fun getServiceData(discriminator: Int): ByteArray {
     val opcode = 0
     val version = 0
@@ -43,6 +77,9 @@ class BluetoothManager : BleCallback {
       .toByteArray()
   }
 
+  /**
+   * Builds the scan mask for full vs short discriminator matching.
+   */
   private fun getServiceDataMask(isShortDiscriminator: Boolean): ByteArray {
     val shortDiscriminatorMask =
       when (isShortDiscriminator) {
@@ -52,10 +89,17 @@ class BluetoothManager : BleCallback {
     return intArrayOf(0xff, shortDiscriminatorMask, 0xff).map { it.toByte() }.toByteArray()
   }
 
+  /**
+   * Finds a Matter BLE device using a full discriminator.
+   */
   suspend fun getBluetoothDevice(context: Context, discriminator: Int): BluetoothDevice? {
     return getBluetoothDevice(context, discriminator, false)
   }
 
+  /**
+   * Scans for Matter BLE advertisements that match the onboarding payload's
+   * discriminator. Returns the first matching device or null after timeout.
+   */
   suspend fun getBluetoothDevice(
     context: Context,
     discriminator: Int,
@@ -113,7 +157,8 @@ class BluetoothManager : BleCallback {
   }
 
   /**
-   * Connects to a [BluetoothDevice] and suspends until [BluetoothGattCallback.onServicesDiscovered]
+   * Connects to a [BluetoothDevice], registers the GATT connection with
+   * Matter's BLE manager, and resumes once MTU negotiation completes.
    */
   suspend fun connect(context: Context, device: BluetoothDevice): BluetoothGatt? {
     return suspendCancellableCoroutine { continuation ->
@@ -122,6 +167,8 @@ class BluetoothManager : BleCallback {
       Log.i(TAG, "Connecting")
       bleGatt = device.connectGatt(context, false, bluetoothGattCallback)
 
+      // Register the raw Android GATT connection with Matter's BLE layer. The
+      // returned ID is Matter's connection handle, not a BluetoothGatt object.
       connectionId = ChipClient.getAndroidChipPlatform(context).bleManager.addConnection(bleGatt)
       ChipClient.getAndroidChipPlatform(context).bleManager.setBleCallback(this)
 
@@ -139,6 +186,8 @@ class BluetoothManager : BleCallback {
       private val coroutineContinuation = continuation
 
       override fun onConnectionStateChange(gatt: BluetoothGatt?, status: Int, newState: Int) {
+        // Forward Android connection state changes into Matter's BLE manager so
+        // it can drive the BTP connection lifecycle.
         super.onConnectionStateChange(gatt, status, newState)
         Log.i(
           TAG,
@@ -153,6 +202,8 @@ class BluetoothManager : BleCallback {
       }
 
       override fun onServicesDiscovered(gatt: BluetoothGatt?, status: Int) {
+        // Matter's wrapped callback inspects the discovered CHIP BLE service and
+        // characteristics. After that we request a larger MTU for BTP packets.
         Log.d(TAG, "${gatt?.device?.name}.onServicesDiscovered status = $status")
         wrappedCallback.onServicesDiscovered(gatt, status)
 
@@ -161,6 +212,8 @@ class BluetoothManager : BleCallback {
       }
 
       override fun onMtuChanged(gatt: BluetoothGatt?, mtu: Int, status: Int) {
+        // Once MTU negotiation finishes the BLE connection is ready for Matter
+        // commissioning traffic, so the suspended connect() call can resume.
         Log.d(TAG, "${gatt?.device?.name}.onMtuChanged: connecting to CHIP device")
         super.onMtuChanged(gatt, mtu, status)
         wrappedCallback.onMtuChanged(gatt, mtu, status)
@@ -173,6 +226,8 @@ class BluetoothManager : BleCallback {
         gatt: BluetoothGatt,
         characteristic: BluetoothGattCharacteristic
       ) {
+        // Incoming indication/notification data from the device is forwarded to
+        // Matter's BLE manager for BTP reassembly.
         Log.d(TAG, "${gatt.device.name}.onCharacteristicChanged: ${characteristic.uuid}")
         wrappedCallback.onCharacteristicChanged(gatt, characteristic)
       }
@@ -182,6 +237,8 @@ class BluetoothManager : BleCallback {
         characteristic: BluetoothGattCharacteristic,
         status: Int
       ) {
+        // Keep Matter's BLE manager informed about read completions if it
+        // requested any characteristic reads.
         Log.d(TAG, "${gatt.device.name}.onCharacteristicRead: ${characteristic.uuid} -> $status")
         wrappedCallback.onCharacteristicRead(gatt, characteristic, status)
       }
@@ -191,6 +248,8 @@ class BluetoothManager : BleCallback {
         characteristic: BluetoothGattCharacteristic,
         status: Int
       ) {
+        // Write confirmations let Matter know whether a BTP fragment was sent
+        // successfully to the device.
         Log.d(TAG, "${gatt.device.name}.onCharacteristicWrite: ${characteristic.uuid} -> $status")
         wrappedCallback.onCharacteristicWrite(gatt, characteristic, status)
       }
@@ -200,6 +259,8 @@ class BluetoothManager : BleCallback {
         descriptor: BluetoothGattDescriptor,
         status: Int
       ) {
+        // Descriptor reads are forwarded for completeness to the wrapped Matter
+        // BLE callback.
         Log.d(TAG, "${gatt.device.name}.onDescriptorRead: ${descriptor.uuid} -> $status")
         wrappedCallback.onDescriptorRead(gatt, descriptor, status)
       }
@@ -209,16 +270,21 @@ class BluetoothManager : BleCallback {
         descriptor: BluetoothGattDescriptor,
         status: Int
       ) {
+        // Subscription setup normally writes the CCC descriptor; Matter needs
+        // this completion to continue the BLE transport setup.
         Log.d(TAG, "${gatt.device.name}.onDescriptorWrite: ${descriptor.uuid} -> $status")
         wrappedCallback.onDescriptorWrite(gatt, descriptor, status)
       }
 
       override fun onReadRemoteRssi(gatt: BluetoothGatt, rssi: Int, status: Int) {
+        // Forward RSSI reads if the underlying BLE stack requested them.
         Log.d(TAG, "${gatt.device.name}.onReadRemoteRssi: $rssi -> $status")
         wrappedCallback.onReadRemoteRssi(gatt, rssi, status)
       }
 
       override fun onReliableWriteCompleted(gatt: BluetoothGatt, status: Int) {
+        // Forward reliable-write completion to keep the wrapped callback state
+        // consistent with Android GATT.
         Log.d(TAG, "${gatt.device.name}.onReliableWriteCompleted: $status")
         wrappedCallback.onReliableWriteCompleted(gatt, status)
       }
@@ -231,17 +297,27 @@ class BluetoothManager : BleCallback {
   }
 
   override fun onCloseBleComplete(connId: Int) {
+    // Matter reports that BLE close finished; clear the stored connection ID.
     connectionId = 0
     Log.d(TAG, "onCloseBleComplete")
   }
 
   override fun onNotifyChipConnectionClosed(connId: Int) {
+    // Matter reports that the CHIP BLE connection is closed; release the GATT
+    // resource and clear the stored connection ID.
     bleGatt?.close()
     connectionId = 0
     Log.d(TAG, "onNotifyChipConnectionClosed")
   }
 }
 
+/**
+ * Small wrapper around Matter's AndroidBleManager.
+ *
+ * By default the superclass performs the real Android GATT operations. When a
+ * platformDelegate is installed, these callbacks are forwarded to Flutter so a
+ * custom BLE implementation can handle the same Matter BLE transport requests.
+ */
 class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
 
   var platformDelegate: BlePlatformDelegate? = null
@@ -257,6 +333,8 @@ class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
     svcId: ByteArray?,
     charId: ByteArray?
   ): Boolean {
+    // Matter asks the platform to subscribe to a GATT characteristic so the
+    // phone can receive device responses as indications/notifications.
     if (platformDelegate != null) {
       return platformDelegate!!.onSubscribeCharacteristic(connId, svcId, charId)
     }
@@ -268,6 +346,8 @@ class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
     svcId: ByteArray?,
     charId: ByteArray?
   ): Boolean {
+    // Matter asks the platform to cancel the previous subscription for this
+    // service/characteristic on the given Matter BLE connection.
     if (platformDelegate != null) {
       return platformDelegate!!.onUnsubscribeCharacteristic(connId, svcId, charId)
     }
@@ -275,6 +355,7 @@ class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
   }
 
   override fun onCloseConnection(connId: Int): Boolean {
+    // Close the Matter BLE connection identified by connId.
     if (platformDelegate != null) {
       return platformDelegate!!.onCloseConnection(connId)
     }
@@ -287,6 +368,8 @@ class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
     charId: ByteArray?,
     characteristicData: ByteArray?
   ): Boolean {
+    // Matter sends commissioning/BTP bytes to the device by writing this data
+    // to the provided GATT service and characteristic.
     if (platformDelegate != null) {
       return platformDelegate!!.onSendWriteRequest(connId, svcId, charId, characteristicData)
     }
@@ -294,6 +377,7 @@ class ZGAndroidBleManager(context: Context) : AndroidBleManager(context) {
   }
 
   override fun onGetMTU(connId: Int): Int {
+    // Matter queries the negotiated BLE MTU so it can size BTP fragments.
     if (platformDelegate != null) {
       return platformDelegate!!.onGetMTU(connId)
     }

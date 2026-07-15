@@ -2,6 +2,14 @@
 
 Demonstrates how to use the flutter_matter plugin.
 
+## Matter Linux simulator
+
+For laptop-based testing without BLE hardware, run the official Matter Linux
+sample app in WSL2 and use the example app's `Start on-network simulator`
+button during provisioning.
+
+See [MATTER_LINUX_SIMULATOR.md](MATTER_LINUX_SIMULATOR.md).
+
 ## Getting Started
 
 This project is a starting point for a Flutter application.

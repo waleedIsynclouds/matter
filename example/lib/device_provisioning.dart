@@ -12,6 +12,11 @@ import 'package:hex/hex.dart';
 import 'package:collection/collection.dart';
 import 'package:pointycastle/export.dart' hide State;
 
+enum ProvisioningTransport {
+  androidBle,
+  onNetwork,
+}
+
 class DeviceProvisioningPage extends StatefulWidget {
   final OnboardingPayload payload;
   final String onboardingPayload;
@@ -35,6 +40,7 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
   int? errorCode;
   int? nodeId;
   int? fabricId;
+  ProvisioningTransport? transport;
   ChipDeviceController? deviceController;
   late AsymmetricKeyPair<ECPublicKey, ECPrivateKey> keypair;
   late List<Uint8List> cert;
@@ -64,11 +70,23 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
             SizedBox(height: 16,),
             Align(
               alignment: Alignment.center,
-              child: ElevatedButton(
-                onPressed: () async {
-                  startProvisioning();
-                },
-                child: const Text('Start provisioning'),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  ElevatedButton(
+                    onPressed: () async {
+                      startProvisioning(ProvisioningTransport.androidBle);
+                    },
+                    child: const Text('Start provisioning with BLE'),
+                  ),
+                  const SizedBox(height: 8),
+                  ElevatedButton(
+                    onPressed: () async {
+                      startProvisioning(ProvisioningTransport.onNetwork);
+                    },
+                    child: const Text('Start on-network simulator'),
+                  ),
+                ],
               ),
             )
           ],
@@ -80,6 +98,11 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
           children: [
             if (!isFinish)
               Text('Current Step: ${stage}', style: TextStyle(fontSize: 20),),
+            if (!isFinish && transport == ProvisioningTransport.onNetwork)
+              const Padding(
+                padding: EdgeInsets.only(top: 8),
+                child: Text('BLE skipped. Commissioning with onboarding code.'),
+              ),
             if (isFinish)
               Text('Provisioning${errorCode == 0 ? 'success' : 'fail'} code $errorCode', style: TextStyle(fontSize: 20),),
             if (isFinish)
@@ -93,17 +116,21 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
     );
   }
 
-  void startProvisioning() async {
+  void startProvisioning(ProvisioningTransport selectedTransport) async {
     setState(() {
+      transport = selectedTransport;
       isProvisioning = true;
-      stage = 'Connecting to the device....';
+      stage = selectedTransport == ProvisioningTransport.onNetwork
+          ? 'Preparing on-network commissioning...'
+          : 'Connecting to the device....';
     });
     
     // vendorId and productId are all 0, it's a share code 
     bool isShare = widget.payload.vendorId == 0 && widget.payload.productId == 0x00;
+    final shouldUseAndroidBle = selectedTransport == ProvisioningTransport.androidBle && Platform.isAndroid && !isShare;
     // Onlay Android can use custom ble stack
     // if you not use custom ble stack, unnecessary care about the ble code
-    if (Platform.isAndroid && !isShare) { 
+    if (shouldUseAndroidBle) { 
       final device = await BleManager.getDevice(widget.payload);
       print("find device $device");
       if (device != null) {
@@ -163,7 +190,7 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
     nodeId = await nextNodeId();
     await deviceController!.pairDevice(
       nodeId!, 
-      connectId, 
+      shouldUseAndroidBle ? connectId : null,
       widget.payload.setupPinCode, 
       widget.onboardingPayload,
       null,

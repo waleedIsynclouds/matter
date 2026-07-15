@@ -2,14 +2,14 @@ group 'com.tyx.flutter_matter'
 version '1.0-SNAPSHOT'
 
 buildscript {
-    ext.kotlin_version = '1.7.10'
+    ext.kotlin_version = '2.3.20'
     repositories {
         google()
         mavenCentral()
     }
 
     dependencies {
-        classpath 'com.android.tools.build:gradle:7.3.0'
+        classpath 'com.android.tools.build:gradle:8.11.1'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
     }
 }
@@ -26,43 +26,26 @@ apply plugin: 'com.android.library'
 apply plugin: 'kotlin-android'
 
 android {
-    if (project.android.hasProperty("namespace")) {
-        namespace 'com.tyx.flutter_matter'
-    }
+    namespace 'com.tyx.flutter_matter'
 
-    compileSdk 34
+    compileSdk 36
 
     compileOptions {
-        sourceCompatibility JavaVersion.VERSION_1_8
-        targetCompatibility JavaVersion.VERSION_1_8
-    }
-
-    kotlinOptions {
-        jvmTarget = '1.8'
+        sourceCompatibility JavaVersion.VERSION_17
+        targetCompatibility JavaVersion.VERSION_17
     }
 
     sourceSets {
         main.java.srcDirs += 'src/main/kotlin'
         test.java.srcDirs += 'src/test/kotlin'
-    }
-
-    defaultConfig {
-        minSdkVersion 21
-        consumerProguardFiles 'proguard-rules.pro'
-    }
-
-    dependencies {
-        implementation fileTree(dir: "libs", include: ["*.jar", "*.so"])
-        implementation 'com.github.Tan-yi-xiong:flutter_matter_android_prefixed:1.0.5'
-        // implementation 'com.tyx.flutter_matter:flutter_matter_android_prefixed:1.0.0'
-        testImplementation 'org.jetbrains.kotlin:kotlin-test'
-        testImplementation 'org.mockito:mockito-core:5.0.0'
-    }
-
-    sourceSets {
         main {
             jniLibs.srcDirs = ['libs/jniLibs']
         }
+    }
+
+    defaultConfig {
+        minSdkVersion 24
+        consumerProguardFiles 'proguard-rules.pro'
     }
 
     testOptions {
@@ -76,4 +59,18 @@ android {
             }
         }
     }
+}
+
+kotlin {
+    compilerOptions {
+        jvmTarget = org.jetbrains.kotlin.gradle.dsl.JvmTarget.JVM_17
+    }
+}
+
+dependencies {
+    implementation fileTree(dir: "libs", include: ["*.jar", "*.so"])
+    implementation 'com.github.Tan-yi-xiong:flutter_matter_android_prefixed:1.0.5'
+    // implementation 'com.tyx.flutter_matter:flutter_matter_android_prefixed:1.0.0'
+    testImplementation 'org.jetbrains.kotlin:kotlin-test'
+    testImplementation 'org.mockito:mockito-core:5.0.0'
 }

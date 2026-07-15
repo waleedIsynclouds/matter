@@ -4,9 +4,6 @@ allprojects {
         mavenCentral()
         maven { url 'https://jitpack.io' }
     }
-    buildscript {
-        ext.kotlin_version = '1.6.0'
-    }
 }
 
 rootProject.buildDir = '../build'

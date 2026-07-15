@@ -1,0 +1,1155 @@
+{
+  "version": 1,
+  "created_at": "2026-07-12T21:32:26.332Z",
+  "lifetime": {
+    "total_tokens_estimated": 143227,
+    "total_reads": 98,
+    "total_writes": 76,
+    "total_sessions": 10,
+    "anatomy_hits": 93,
+    "anatomy_misses": 0,
+    "repeated_reads_blocked": 8,
+    "estimated_savings_vs_bare_cli": 82554
+  },
+  "sessions": [
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T21:33:48.974Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1574,
+        "output_tokens_estimated": 0,
+        "reads_count": 3,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 3
+      }
+    },
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T21:43:15.902Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 517,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 541,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 22,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Podfile",
+          "tokens_estimated": 441,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 311,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 514,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 86,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 52,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 13,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 8,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 3564,
+        "output_tokens_estimated": 756,
+        "reads_count": 13,
+        "writes_count": 9,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 12
+      }
+    },
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T22:11:30.723Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 517,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 541,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 22,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Podfile",
+          "tokens_estimated": 441,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 311,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 514,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 86,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 52,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 13,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 17,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 7,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 5090,
+        "output_tokens_estimated": 866,
+        "reads_count": 14,
+        "writes_count": 16,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 13
+      }
+    },
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T22:19:08.199Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 517,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 541,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 22,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Podfile",
+          "tokens_estimated": 441,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 311,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 514,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 86,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 52,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 13,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 17,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 7,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 6,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 5090,
+        "output_tokens_estimated": 872,
+        "reads_count": 14,
+        "writes_count": 17,
+        "repeated_reads_blocked": 1,
+        "anatomy_lookups": 13
+      }
+    },
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T22:23:25.977Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 517,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 541,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 22,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Podfile",
+          "tokens_estimated": 441,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 311,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/controller.dart",
+          "tokens_estimated": 14382,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/ble_manager.dart",
+          "tokens_estimated": 711,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 514,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 86,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 52,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 13,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 17,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 7,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 6,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 20183,
+        "output_tokens_estimated": 872,
+        "reads_count": 16,
+        "writes_count": 17,
+        "repeated_reads_blocked": 2,
+        "anatomy_lookups": 15
+      }
+    },
+    {
+      "id": "session-2026-07-12-0032",
+      "started": "2026-07-12T21:32:40.922Z",
+      "ended": "2026-07-12T22:34:27.223Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/README.md",
+          "tokens_estimated": 1312,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 517,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 10,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 541,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 22,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Podfile",
+          "tokens_estimated": 441,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 311,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 69,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 763,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/controller.dart",
+          "tokens_estimated": 14382,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/ble_manager.dart",
+          "tokens_estimated": 711,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 514,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 37,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/build.gradle",
+          "tokens_estimated": 0,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 86,
+          "action": "create"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 52,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/app/build.gradle",
+          "tokens_estimated": 13,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/flutter_matter.podspec",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle/wrapper/gradle-wrapper.properties",
+          "tokens_estimated": 23,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 17,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/settings.gradle",
+          "tokens_estimated": 18,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 14,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 8,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/android/gradle.properties",
+          "tokens_estimated": 7,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/pubspec.yaml",
+          "tokens_estimated": 6,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 20183,
+        "output_tokens_estimated": 872,
+        "reads_count": 16,
+        "writes_count": 17,
+        "repeated_reads_blocked": 2,
+        "anatomy_lookups": 15
+      }
+    },
+    {
+      "id": "session-2026-07-13-1016",
+      "started": "2026-07-13T07:16:07.829Z",
+      "ended": "2026-07-13T07:21:39.226Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter_method_channel.dart",
+          "tokens_estimated": 938,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter_platform_interface.dart",
+          "tokens_estimated": 245,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart",
+          "tokens_estimated": 262,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/FlutterMatterPlugin.kt",
+          "tokens_estimated": 609,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/controller.dart",
+          "tokens_estimated": 14382,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/ChipClient.kt",
+          "tokens_estimated": 1439,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/FlutterMatterPlugin.m",
+          "tokens_estimated": 457,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 17756,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/Utils.kt",
+          "tokens_estimated": 1035,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 37123,
+        "output_tokens_estimated": 0,
+        "reads_count": 9,
+        "writes_count": 0,
+        "repeated_reads_blocked": 2,
+        "anatomy_lookups": 9
+      }
+    },
+    {
+      "id": "session-2026-07-14-1232",
+      "started": "2026-07-14T09:32:46.960Z",
+      "ended": "2026-07-14T10:35:35.360Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Info.plist",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMatter.h",
+          "tokens_estimated": 917,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1117,
+        "output_tokens_estimated": 0,
+        "reads_count": 2,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-14-1232",
+      "started": "2026-07-14T09:32:46.960Z",
+      "ended": "2026-07-14T10:37:55.693Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Info.plist",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMatter.h",
+          "tokens_estimated": 917,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 480,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 1597,
+        "output_tokens_estimated": 0,
+        "reads_count": 3,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 3
+      }
+    },
+    {
+      "id": "session-2026-07-14-1232",
+      "started": "2026-07-14T09:32:46.960Z",
+      "ended": "2026-07-14T10:41:15.313Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Info.plist",
+          "tokens_estimated": 200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMatter.h",
+          "tokens_estimated": 917,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/build.gradle",
+          "tokens_estimated": 480,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/controller.dart",
+          "tokens_estimated": 14382,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 17756,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/ble.dart",
+          "tokens_estimated": 5083,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/onboarding.dart",
+          "tokens_estimated": 1044,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/device_provisioning.dart",
+          "tokens_estimated": 3606,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [],
+      "totals": {
+        "input_tokens_estimated": 43468,
+        "output_tokens_estimated": 0,
+        "reads_count": 8,
+        "writes_count": 0,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 8
+      }
+    }
+  ],
+  "daemon_usage": [],
+  "waste_flags": [],
+  "optimization_report": {
+    "last_generated": null,
+    "patterns": []
+  }
+}

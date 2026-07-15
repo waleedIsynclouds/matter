@@ -1,0 +1,103 @@
+{
+  "version": 1,
+  "bugs": [
+    {
+      "id": "bug-001",
+      "timestamp": "2026-07-12T21:42:03.687Z",
+      "error_message": "Incorrect value in code",
+      "file": "example/android/settings.gradle",
+      "root_cause": "Had \"8.6.0\"",
+      "fix": "Changed to \"9.0.1\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "gradle"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-12T21:42:03.687Z"
+    },
+    {
+      "id": "bug-002",
+      "timestamp": "2026-07-12T21:42:25.606Z",
+      "error_message": "Incorrect value in code",
+      "file": "ios/flutter_matter.podspec",
+      "root_cause": "Had '11.0'",
+      "fix": "Changed to '13.0'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "podspec"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-12T21:42:25.606Z"
+    },
+    {
+      "id": "bug-003",
+      "timestamp": "2026-07-12T22:10:01.903Z",
+      "error_message": "Incorrect value in code",
+      "file": "android/build.gradle",
+      "root_cause": "Had 'com.android.tools.build:gradle:9.0.1'",
+      "fix": "Changed to 'com.android.tools.build:gradle:8.11.1'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "gradle"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-12T22:10:01.903Z"
+    },
+    {
+      "id": "bug-004",
+      "timestamp": "2026-07-12T22:10:03.076Z",
+      "error_message": "Incorrect value in code",
+      "file": "example/android/settings.gradle",
+      "root_cause": "Had \"9.0.1\"",
+      "fix": "Changed to \"8.11.1\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "gradle"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-12T22:10:03.076Z"
+    },
+    {
+      "id": "bug-005",
+      "timestamp": "2026-07-12T22:10:18.936Z",
+      "error_message": "Incorrect value in code",
+      "file": "pubspec.yaml",
+      "root_cause": "Had '>=3.3.3 <4.0.0'",
+      "fix": "Changed to \">=3.44.0\"",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "yaml"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-12T22:10:18.936Z"
+    },
+    {
+      "id": "bug-006",
+      "timestamp": "2026-07-13T00:00:00Z",
+      "error_message": "version solving failed: flutter_matter basic_utils ^5.8.2 requires pointycastle ^4.0.0, but example depends on pointycastle ^3.1.3",
+      "file": "pubspec.yaml",
+      "root_cause": "basic_utils was bumped to ^5.8.2, whose floor (5.8.2) depends on pointycastle 4.x; example app pins pointycastle ^3.1.3",
+      "fix": "lowered plugin constraint to basic_utils ^5.7.0 so pub can resolve a 5.7.x build using pointycastle 3.x (resolved to pointycastle 3.9.1)",
+      "tags": [
+        "pubspec",
+        "dependency-conflict",
+        "basic_utils",
+        "pointycastle",
+        "pub-get"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-13T00:00:00Z"
+    }
+  ]
+}
