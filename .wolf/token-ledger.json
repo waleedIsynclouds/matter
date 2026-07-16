@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-07-12T21:32:26.332Z",
   "lifetime": {
-    "total_tokens_estimated": 143227,
-    "total_reads": 98,
-    "total_writes": 76,
-    "total_sessions": 10,
-    "anatomy_hits": 93,
-    "anatomy_misses": 0,
+    "total_tokens_estimated": 163141,
+    "total_reads": 104,
+    "total_writes": 82,
+    "total_sessions": 15,
+    "anatomy_hits": 97,
+    "anatomy_misses": 2,
     "repeated_reads_blocked": 8,
-    "estimated_savings_vs_bare_cli": 82554
+    "estimated_savings_vs_bare_cli": 83354
   },
   "sessions": [
     {
@@ -1143,6 +1143,106 @@
         "writes_count": 0,
         "repeated_reads_blocked": 0,
         "anatomy_lookups": 8
+      }
+    },
+    {
+      "id": "session-2026-07-16-1233",
+      "started": "2026-07-16T09:33:30.508Z",
+      "ended": "2026-07-16T09:39:02.994Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/MATTER_LINUX_SIMULATOR.md",
+          "tokens_estimated": 342,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart",
+          "tokens_estimated": 5200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/tools/matter_linux_simulator_wsl2.sh",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 2894,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 5542,
+        "output_tokens_estimated": 2894,
+        "reads_count": 3,
+        "writes_count": 1,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-16-1233",
+      "started": "2026-07-16T09:33:30.508Z",
+      "ended": "2026-07-16T10:09:54.158Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/MATTER_LINUX_SIMULATOR.md",
+          "tokens_estimated": 342,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart",
+          "tokens_estimated": 5200,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/tools/matter_linux_simulator_wsl2.sh",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 2894,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 2693,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 198,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 53,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/write-for-me-a-stateless-karp.md",
+          "tokens_estimated": 98,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 5542,
+        "output_tokens_estimated": 5936,
+        "reads_count": 3,
+        "writes_count": 5,
+        "repeated_reads_blocked": 0,
+        "anatomy_lookups": 2
       }
     }
   ],

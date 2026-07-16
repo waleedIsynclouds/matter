@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-12T22:17:10.992Z
-> Files: 202 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-16T10:11:37.441Z
+> Files: 204 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -20,6 +20,11 @@
 ## .claude/rules/
 
 - `openwolf.md` (~313 tok)
+
+## C:/Users/dedoa/.claude/plans/
+
+- `snoopy-snuggling-salamander.md` — Single-Page Stepper Commissioning Flow (example app) (~2357 tok)
+- `write-for-me-a-stateless-karp.md` — Plan: `matter_sim` — a Python project to simulate a Matter device for the Flutter example (~2145 tok)
 
 ## android/
 
@@ -61,6 +66,7 @@
 - `.gitignore` — Git ignore rules (~196 tok)
 - `.metadata` — This file tracks properties of this Flutter project. (~469 tok)
 - `analysis_options.yaml` — This file configures the analyzer, which statically analyzes Dart code to (~414 tok)
+- `MATTER_LINUX_SIMULATOR.md` — Matter Linux simulator testing notes (~342 tok)
 - `pubspec.yaml` — Dart/Flutter package manifest (~1091 tok)
 - `README.md` — Project documentation (~153 tok)
 
@@ -186,14 +192,13 @@
 ## example/lib/
 
 - `ble_manager.dart` — BleManager: disconnectAll (~711 tok)
+- `commissioning_controller.dart` — CommissioningController: start, cleanup, commissioning callbacks, BLE delegate, NOC issuer (~5200 tok)
+- `commissioning_page.dart` — Single-page Stepper commissioning flow with QR/manual code, Wi-Fi, transport, progress log (~4300 tok)
 - `control_page.dart` — Stateful widget: ControlPage (~4171 tok)
 - `data.dart` — MyKeypairDelegate: generatePrivateKey (~2407 tok)
-- `device_provisioning.dart` — Stateful widget: DeviceProvisioningPage (~3606 tok)
 - `home_page.dart` — Stateful widget: HomePage (~489 tok)
 - `main.dart` — Declares MaterialApp (~54 tok)
-- `onboarding.dart` — Stateful widget: OnboardingWidget (~963 tok)
 - `uitls.dart` (~36 tok)
-- `wifi_input.dart` — Stateful widget: WifiInputPage (~726 tok)
 
 ## example/test/
 

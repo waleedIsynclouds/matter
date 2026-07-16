@@ -28,3 +28,10 @@ migrate_working_dir/
 **/doc/api/
 .dart_tool/
 build/
+
+# Python simulator tooling
+tools/matter_sim/.venv/
+tools/matter_sim/.pytest_cache/
+tools/matter_sim/**/*.pyc
+tools/matter_sim/**/__pycache__/
+tools/matter_sim/*.egg-info/
