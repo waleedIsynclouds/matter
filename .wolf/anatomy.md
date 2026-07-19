@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:45:37.919Z
-> Files: 6 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:52:14.196Z
+> Files: 8 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -77,6 +77,7 @@
 
 ## example/ios/MatterExt/
 
+- `Info.plist` (~139 tok)
 
 ## example/ios/Runner.xcodeproj/
 
@@ -98,6 +99,7 @@
 
 ## example/ios/Runner/
 
+- `Info.plist` (~838 tok)
 
 ## example/ios/Runner/Assets.xcassets/AppIcon.appiconset/
 

@@ -8,7 +8,7 @@
       "first_read": "2026-07-19T10:58:53.890Z"
     },
     "d:/Waleed/flutter projects/matter/ios/Classes/MatterDevicePair.swift": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-19T10:59:27.725Z"
     },
@@ -48,7 +48,7 @@
       "first_read": "2026-07-19T11:23:16.747Z"
     },
     "d:/Waleed/flutter projects/matter/example/ios/Runner/Runner.entitlements": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-19T11:23:53.332Z"
     },
@@ -81,6 +81,21 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-19T11:41:34.731Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/ios/MatterExt/MatterExt.entitlements": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:50:19.712Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/ios/Runner/Info.plist": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:52:00.336Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/ios/MatterExt/Info.plist": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:52:10.123Z"
     }
   },
   "files_written": [
@@ -143,6 +158,18 @@
       "action": "edit",
       "tokens": 144,
       "at": "2026-07-19T11:45:37.930Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/ios/Runner/Info.plist",
+      "action": "edit",
+      "tokens": 21,
+      "at": "2026-07-19T11:52:06.386Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/ios/MatterExt/Info.plist",
+      "action": "edit",
+      "tokens": 21,
+      "at": "2026-07-19T11:52:14.207Z"
     }
   ],
   "edit_counts": {
@@ -151,11 +178,13 @@
     "ios/Classes/DeviceControlHandle.m": 2,
     "lib/src/exception.dart": 1,
     "lib/src/controller.dart": 2,
-    "example/lib/commissioning_controller.dart": 2
+    "example/lib/commissioning_controller.dart": 2,
+    "example/ios/Runner/Info.plist": 1,
+    "example/ios/MatterExt/Info.plist": 1
   },
   "anatomy_hits": 0,
-  "anatomy_misses": 16,
-  "repeated_reads_warned": 6,
+  "anatomy_misses": 19,
+  "repeated_reads_warned": 8,
   "cerebrum_warnings": 0,
-  "stop_count": 11
+  "stop_count": 13
 }

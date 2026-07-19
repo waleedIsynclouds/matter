@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AppGroupId</key>
-	<string>group.xxxxxx.app</string>
+	<string>group.waleed.zengge.matterTest</string>
 	<key>NSExtension</key>
 	<dict>
 		<key>NSExtensionPointIdentifier</key>

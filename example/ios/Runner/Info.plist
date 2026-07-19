@@ -3,7 +3,7 @@
 <plist version="1.0">
 <dict>
 	<key>AppGroupId</key>
-	<string>group.xxxx.app</string>
+	<string>group.waleed.zengge.matterTest</string>
 	<key>CADisableMinimumFrameDurationOnPhone</key>
 	<true/>
 	<key>CFBundleDevelopmentRegion</key>
