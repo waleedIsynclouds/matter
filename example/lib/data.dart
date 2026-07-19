@@ -185,17 +185,31 @@ Future<List<Uint8List>> getX509Certificate() async {
 
 class Device {
   final int nodeId;
+  final int? vendorId;
+  final int? productId;
+  final int? discriminator;
+  final DateTime? pairedAt;
 
-  Device(this.nodeId);
+  Device(this.nodeId, {this.vendorId, this.productId, this.discriminator, this.pairedAt});
 
   toJson() {
     return {
       'nodeId': nodeId,
+      'vendorId': vendorId,
+      'productId': productId,
+      'discriminator': discriminator,
+      'pairedAt': pairedAt?.toIso8601String(),
     };
   }
 
   factory Device.fromJson(Map<String, dynamic> json) {
-    return Device(json['nodeId']);
+    return Device(
+      json['nodeId'],
+      vendorId: json['vendorId'],
+      productId: json['productId'],
+      discriminator: json['discriminator'],
+      pairedAt: json['pairedAt'] == null ? null : DateTime.tryParse(json['pairedAt']),
+    );
   }
 }
 

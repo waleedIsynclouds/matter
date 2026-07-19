@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:52:14.196Z
-> Files: 8 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T12:09:53.521Z
+> Files: 11 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -115,8 +115,11 @@
 
 ## example/lib/
 
-- `commissioning_controller.dart` — Class: CommissioningSubStep (~4806 tok)
+- `commissioning_controller.dart` — Class: CommissioningSubStep (~4853 tok)
 - `commissioning_page.dart` — Stateful widget: CommissioningPage (~6102 tok)
+- `control_page.dart` — Stateful widget: ControlPage (~6569 tok)
+- `data.dart` — Class: MyKeypairDelegate (~2551 tok)
+- `home_page.dart` — Stateful widget: HomePage (~655 tok)
 
 ## example/test/
 

@@ -351,7 +351,13 @@ class CommissioningController
     _addLog('onCommissioningComplete nodeId=$nodeId errorCode=$errorCode');
     if (errorCode == 0 && nodeId != null) {
       _markAllDone();
-      saveDevice(Device(nodeId));
+      saveDevice(Device(
+        nodeId,
+        vendorId: payload.vendorId,
+        productId: payload.productId,
+        discriminator: payload.discriminator,
+        pairedAt: DateTime.now(),
+      ));
       _finish(true, errorCode);
     } else {
       _fail(_activePhase, errorCode, 'Commissioning failed');

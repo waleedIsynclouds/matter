@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_matter/flutter_matter.dart';
 import 'package:flutter_matter_example/data.dart';
@@ -51,6 +53,7 @@ class _ControlPageState extends State<ControlPage>
   bool connectting = false;
   ChipDeviceController? chipDeviceController;
   final tabs = [
+    Tab(text: 'Info'),
     Tab(text: 'On/Off'),
     Tab(text: 'Read/Write'),
     // Tab(text: 'Subscribe'),
@@ -164,6 +167,12 @@ class _ControlPageState extends State<ControlPage>
             if (connectContext == null) {
               return Center(child: Text("Device not connected"));
             } else {
+              if (tabs[index].text == 'Info') {
+                return DeviceInfoTabPage(
+                    chipDeviceController: chipDeviceController!,
+                    controlDevice: widget.device,
+                    controlContext: connectContext);
+              }
               if (tabs[index].text == 'OCW') {
                 return OCWTabPage(
                     chipDeviceController: chipDeviceController!,
@@ -506,6 +515,285 @@ class _Read_WritePageState extends State<Read_WritePage> {
           Text("Device NodeLabel Value: $_readValue")
         ],
       ),
+    );
+  }
+}
+
+/// Info Page: static commissioning metadata + a one-shot read of the Basic
+/// Information cluster + an opt-in wildcard subscription that streams every
+/// attribute report and event the device sends.
+class DeviceInfoTabPage extends StatefulWidget {
+  final ChipDeviceController chipDeviceController;
+  final Device controlDevice;
+  final Object? controlContext;
+
+  const DeviceInfoTabPage(
+      {super.key,
+      required this.chipDeviceController,
+      required this.controlDevice,
+      this.controlContext});
+
+  @override
+  State<DeviceInfoTabPage> createState() => _DeviceInfoTabPageState();
+}
+
+class _DeviceInfoTabPageState extends State<DeviceInfoTabPage> {
+  static const int _basicInfoClusterId = 0x00000028;
+
+  static const Map<int, String> _basicInfoLabels = {
+    1: 'Vendor name',
+    2: 'Vendor ID',
+    3: 'Product name',
+    4: 'Product ID',
+    5: 'Node label',
+    6: 'Location',
+    7: 'Hardware version',
+    8: 'Hardware version string',
+    9: 'Software version',
+    10: 'Software version string',
+    11: 'Manufacturing date',
+    12: 'Part number',
+    13: 'Product URL',
+    14: 'Product label',
+    15: 'Serial number',
+    18: 'Unique ID',
+  };
+
+  bool _loadingInfo = false;
+  Map<int, String> _basicInfo = {};
+  bool _liveFeedOn = false;
+  final Set<int> _subscriptionIds = {};
+  final List<String> _eventLog = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadBasicInfo();
+  }
+
+  @override
+  void dispose() {
+    for (final id in _subscriptionIds) {
+      widget.chipDeviceController.getFabricIndex().then((value) {
+        if (value == null) {
+          return;
+        }
+        widget.chipDeviceController
+            .unSubscription(value, widget.controlDevice.nodeId, id);
+      });
+    }
+    super.dispose();
+  }
+
+  String _hex(Uint8List? bytes) => bytes == null
+      ? ''
+      : bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+
+  String _decodeAttribute(int attributeId, AttributeState state) {
+    final tlv = state.tlv;
+    if (tlv == null) {
+      return state.json ?? '';
+    }
+    try {
+      switch (attributeId) {
+        case 2:
+        case 4:
+        case 7:
+          return TlvReader(tlv).getUShort(AnonymousTag.instance).toString();
+        case 9:
+          return TlvReader(tlv).getUInt(AnonymousTag.instance).toString();
+        default:
+          return TlvReader(tlv).getString(AnonymousTag.instance).toString();
+      }
+    } catch (_) {
+      return _hex(tlv);
+    }
+  }
+
+  void _loadBasicInfo() {
+    setState(() {
+      _loadingInfo = true;
+    });
+    final attributePath = ChipAttributePath(
+      endpointId: ChipPathId.forId(0),
+      clusterId: ChipPathId.forId(_basicInfoClusterId),
+      attributeId: ChipPathId.forWildcard(),
+    );
+    widget.chipDeviceController.read(
+      widget.controlDevice.nodeId,
+      ReportCallbackWarp(
+        onReportFun: (nodeState) {
+          final attributes =
+              nodeState.endpoints[0]?.clusters[_basicInfoClusterId]?.attributes ??
+                  {};
+          final decoded = <int, String>{};
+          attributes.forEach((id, state) {
+            decoded[id] = _decodeAttribute(id, state);
+          });
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _basicInfo = decoded;
+            _loadingInfo = false;
+          });
+        },
+        onErrorFun: (_, __, ___) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            _loadingInfo = false;
+          });
+          showToast('Failed to read device info');
+        },
+      ),
+      [attributePath],
+      null,
+      null,
+      false,
+      5000,
+      0,
+      connectContext: widget.controlContext,
+    );
+  }
+
+  void _toggleLiveFeed() {
+    if (_liveFeedOn) {
+      setState(() {
+        _liveFeedOn = false;
+      });
+      return;
+    }
+    setState(() {
+      _liveFeedOn = true;
+    });
+    widget.chipDeviceController.subscribe(
+      widget.controlDevice.nodeId,
+      SubscriptionCallbackWarp(
+        onSubscriptionEstablishedFun: (id) {
+          _subscriptionIds.add(id);
+        },
+        onReportFun: (nodeState) {
+          final lines = <String>[];
+          final ts = DateTime.now().toIso8601String().split('T').last.split('.').first;
+          nodeState.endpoints.forEach((epId, endpoint) {
+            endpoint.clusters.forEach((clusterId, cluster) {
+              cluster.attributes.forEach((attrId, attr) {
+                lines.add(
+                    '[$ts] attr ep:$epId cluster:0x${clusterId.toRadixString(16)} attr:0x${attrId.toRadixString(16)} = ${_decodeAttribute(attrId, attr)}');
+              });
+              cluster.events.forEach((eventId, events) {
+                for (final e in events) {
+                  lines.add(
+                      '[$ts] event ep:$epId cluster:0x${clusterId.toRadixString(16)} event:0x${eventId.toRadixString(16)} #${e.eventNumber} = ${_hex(e.tlv)}');
+                }
+              });
+            });
+          });
+          if (lines.isEmpty || !mounted) {
+            return;
+          }
+          setState(() {
+            _eventLog.insertAll(0, lines);
+            if (_eventLog.length > 200) {
+              _eventLog.removeRange(200, _eventLog.length);
+            }
+          });
+        },
+      ),
+      [
+        ChipAttributePath(
+          endpointId: ChipPathId.forWildcard(),
+          clusterId: ChipPathId.forWildcard(),
+          attributeId: ChipPathId.forWildcard(),
+        )
+      ],
+      [
+        ChipEventPath(
+          endpointId: ChipPathId.forWildcard(),
+          clusterId: ChipPathId.forWildcard(),
+          eventId: ChipPathId.forWildcard(),
+          isUrgent: false,
+        )
+      ],
+      null,
+      1,
+      30,
+      true,
+      false,
+      10000,
+      0,
+      connectContext: widget.controlContext,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final device = widget.controlDevice;
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        Text('Device', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        Text('Node ID: ${device.nodeId}'),
+        if (device.vendorId != null)
+          Text('Vendor ID: 0x${device.vendorId!.toRadixString(16)}'),
+        if (device.productId != null)
+          Text('Product ID: 0x${device.productId!.toRadixString(16)}'),
+        if (device.discriminator != null)
+          Text('Discriminator: ${device.discriminator}'),
+        if (device.pairedAt != null)
+          Text('Paired: ${device.pairedAt!.toLocal()}'),
+        const Divider(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Basic Information cluster',
+                style: Theme.of(context).textTheme.titleMedium),
+            IconButton(
+              icon: const Icon(Icons.refresh),
+              onPressed: _loadingInfo ? null : _loadBasicInfo,
+            ),
+          ],
+        ),
+        if (_loadingInfo) const LinearProgressIndicator(),
+        if (!_loadingInfo && _basicInfo.isEmpty) const Text('No data read yet'),
+        for (final entry in _basicInfo.entries)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Row(
+              children: [
+                SizedBox(
+                  width: 160,
+                  child: Text(_basicInfoLabels[entry.key] ??
+                      'Attribute 0x${entry.key.toRadixString(16)}'),
+                ),
+                Expanded(child: Text(entry.value)),
+              ],
+            ),
+          ),
+        const Divider(height: 24),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text('Live events & attribute reports',
+                style: Theme.of(context).textTheme.titleMedium),
+            ElevatedButton(
+              onPressed: _toggleLiveFeed,
+              child: Text(_liveFeedOn ? 'Stop' : 'Start'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (_eventLog.isEmpty) const Text('No events received yet'),
+        for (final line in _eventLog)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Text(line,
+                style: const TextStyle(fontFamily: 'monospace', fontSize: 12)),
+          ),
+      ],
     );
   }
 }

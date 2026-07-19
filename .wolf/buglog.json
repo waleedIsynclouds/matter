@@ -233,6 +233,102 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-19T11:45:31.580Z"
+    },
+    {
+      "id": "bug-015",
+      "timestamp": "2026-07-19T12:07:24.511Z",
+      "error_message": "Null/undefined access in ",
+      "file": "example/lib/data.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:07:24.511Z"
+    },
+    {
+      "id": "bug-016",
+      "timestamp": "2026-07-19T12:07:44.267Z",
+      "error_message": "Null/undefined access in ",
+      "file": "example/lib/home_page.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:07:44.267Z"
+    },
+    {
+      "id": "bug-017",
+      "timestamp": "2026-07-19T12:07:53.852Z",
+      "error_message": "Wrong reference: devices should be device",
+      "file": "example/lib/home_page.dart",
+      "root_cause": "Used \"devices\" instead of \"device\"",
+      "fix": "Changed devices → device",
+      "tags": [
+        "auto-detected",
+        "wrong-reference",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:07:53.852Z"
+    },
+    {
+      "id": "bug-018",
+      "timestamp": "2026-07-19T12:08:06.754Z",
+      "error_message": "Wrong condition in logic",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Condition was: if (tabs[index].text == 'OCW')",
+      "fix": "Changed to: if (tabs[index].text == 'Info')",
+      "tags": [
+        "auto-detected",
+        "logic-fix",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:08:06.754Z"
+    },
+    {
+      "id": "bug-019",
+      "timestamp": "2026-07-19T12:09:15.033Z",
+      "error_message": "Missing import: dart:typed_data",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Module(s) not imported: dart:typed_data",
+      "fix": "Added import(s) for dart:typed_data",
+      "tags": [
+        "auto-detected",
+        "missing-import",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:09:15.033Z"
+    },
+    {
+      "id": "bug-020",
+      "timestamp": "2026-07-19T12:09:53.539Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T12:09:53.539Z"
     }
   ]
 }

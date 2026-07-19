@@ -54,14 +54,25 @@ class _HomePageState extends State<HomePage> {
       ),
       body: ListView.builder(
         itemBuilder: (context, index) {
+          final device = devices[index];
+          final subtitleParts = <String>[
+            'NodeId: ${device.nodeId}',
+            if (device.vendorId != null)
+              'VID: 0x${device.vendorId!.toRadixString(16)}',
+            if (device.productId != null)
+              'PID: 0x${device.productId!.toRadixString(16)}',
+            if (device.pairedAt != null)
+              'Paired: ${device.pairedAt!.toLocal().toString().split('.').first}',
+          ];
           return ListTile(
-            title: Text("Device ${devices[index].nodeId}"),
-            subtitle: Text("NodeId: ${devices[index].nodeId}"),
+            title: Text("Device ${device.nodeId}"),
+            subtitle: Text(subtitleParts.join(' • ')),
+            isThreeLine: true,
             onTap: () {
               Navigator.of(context).push(
                 MaterialPageRoute(
                   builder: (context) {
-                    return ControlPage(device: devices[index]);
+                    return ControlPage(device: device);
                   },
                 ),
               );
