@@ -66,6 +66,16 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-19T11:25:22.973Z"
+    },
+    "d:/Waleed/flutter projects/matter/lib/src/controller.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:31:22.943Z"
+    },
+    "d:/Waleed/flutter projects/matter/lib/src/exception.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:31:44.875Z"
     }
   },
   "files_written": [
@@ -92,16 +102,23 @@
       "action": "edit",
       "tokens": 303,
       "at": "2026-07-19T11:25:18.090Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/lib/src/exception.dart",
+      "action": "edit",
+      "tokens": 54,
+      "at": "2026-07-19T11:31:48.585Z"
     }
   ],
   "edit_counts": {
     "example/lib/commissioning_page.dart": 2,
     "ios/Classes/Framework Helpers/DefaultsUtils.m": 1,
-    "ios/Classes/DeviceControlHandle.m": 1
+    "ios/Classes/DeviceControlHandle.m": 1,
+    "lib/src/exception.dart": 1
   },
   "anatomy_hits": 0,
-  "anatomy_misses": 13,
+  "anatomy_misses": 15,
   "repeated_reads_warned": 2,
   "cerebrum_warnings": 0,
-  "stop_count": 7
+  "stop_count": 8
 }

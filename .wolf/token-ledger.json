@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-07-12T21:32:26.332Z",
   "lifetime": {
-    "total_tokens_estimated": 190518,
-    "total_reads": 150,
-    "total_writes": 95,
+    "total_tokens_estimated": 197751,
+    "total_reads": 165,
+    "total_writes": 100,
     "total_sessions": 16,
     "anatomy_hits": 97,
-    "anatomy_misses": 48,
-    "repeated_reads_blocked": 14,
-    "estimated_savings_vs_bare_cli": 104994
+    "anatomy_misses": 63,
+    "repeated_reads_blocked": 16,
+    "estimated_savings_vs_bare_cli": 110404
   },
   "sessions": [
     {
@@ -1683,6 +1683,138 @@
         "output_tokens_estimated": 1769,
         "reads_count": 13,
         "writes_count": 4,
+        "repeated_reads_blocked": 2,
+        "anatomy_lookups": 0
+      }
+    },
+    {
+      "id": "session-2026-07-19-1331",
+      "started": "2026-07-19T10:31:36.302Z",
+      "ended": "2026-07-19T11:32:07.975Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMTRCSRInfo.h",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/MatterDevicePair.swift",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/device_provisioning.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_page.dart",
+          "tokens_estimated": 5410,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/home_page.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/pubspec.yaml",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/DefaultsUtils.m",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/ios/Runner/Runner.entitlements",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/FabricKeys.m",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMTRDeviceControllerFactory.h",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/FlutterMatterPlugin.m",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/controller.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/exception.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_page.dart",
+          "tokens_estimated": 157,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_page.dart",
+          "tokens_estimated": 864,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/DefaultsUtils.m",
+          "tokens_estimated": 445,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 303,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/exception.dart",
+          "tokens_estimated": 54,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 5410,
+        "output_tokens_estimated": 1823,
+        "reads_count": 15,
+        "writes_count": 5,
         "repeated_reads_blocked": 2,
         "anatomy_lookups": 0
       }

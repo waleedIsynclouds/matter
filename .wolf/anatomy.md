@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:25:18.087Z
-> Files: 3 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:31:48.581Z
+> Files: 4 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -146,6 +146,7 @@
 
 ## lib/src/
 
+- `exception.dart` — Class: CallPlatformException (~81 tok)
 
 ## lib/src/clusters/
 

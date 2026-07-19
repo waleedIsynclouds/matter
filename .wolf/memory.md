@@ -134,3 +134,5 @@
 | 14:25 | Edited ios/Classes/DeviceControlHandle.m | added 1 condition(s) | ~283 |
 | 14:25 | Session end: 4 writes across 3 files (commissioning_page.dart, DefaultsUtils.m, DeviceControlHandle.m) | 13 reads | ~7179 tok |
 | 14:26 | Session end: 4 writes across 3 files (commissioning_page.dart, DefaultsUtils.m, DeviceControlHandle.m) | 13 reads | ~7179 tok |
+| 14:31 | Edited lib/src/exception.dart | 4→7 lines | ~50 |
+| 14:32 | Session end: 5 writes across 4 files (commissioning_page.dart, DefaultsUtils.m, DeviceControlHandle.m, exception.dart) | 15 reads | ~7233 tok |
