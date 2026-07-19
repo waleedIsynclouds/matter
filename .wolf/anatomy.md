@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:31:48.581Z
-> Files: 4 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:37:31.763Z
+> Files: 5 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -126,7 +126,7 @@
 
 ## ios/Classes/
 
-- `DeviceControlHandle.m` — 禁用某个警告（在文件顶部添加） (~19372 tok)
+- `DeviceControlHandle.m` — 禁用某个警告（在文件顶部添加） (~19423 tok)
 
 ## ios/Classes/Framework Helpers/
 
@@ -146,6 +146,7 @@
 
 ## lib/src/
 
+- `controller.dart` — Represents information relating to NOC CSR. (~14414 tok)
 - `exception.dart` — Class: CallPlatformException (~81 tok)
 
 ## lib/src/clusters/

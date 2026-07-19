@@ -180,9 +180,43 @@
         "diagnostics",
         "plugin-package"
       ],
-      "related_bugs": ["bug-010"],
+      "related_bugs": [
+        "bug-010"
+      ],
       "occurrences": 1,
       "last_seen": "2026-07-19T00:00:00.000Z"
+    },
+    {
+      "id": "bug-012",
+      "timestamp": "2026-07-19T11:37:11.824Z",
+      "error_message": "Significant refactor of ",
+      "file": "ios/Classes/DeviceControlHandle.m",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 10→12 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "m"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T11:37:11.824Z"
+    },
+    {
+      "id": "bug-013",
+      "timestamp": "2026-07-19T11:37:22.103Z",
+      "error_message": "Null/undefined access in ",
+      "file": "lib/src/controller.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T11:37:22.103Z"
     }
   ]
 }

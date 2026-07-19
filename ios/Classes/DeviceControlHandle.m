@@ -700,15 +700,17 @@ static NSString *pairDevice(NSString *params) {
                                                     userInfo:nil];
             }
         } @catch (NSException *exception) {
+            NSLog(@"[flutter_matter] pairDevice failed: %@ - %@", [exception name], [exception reason]);
             pairError = [NSError errorWithDomain:@""
                                             code:1
-                                        userInfo:@{ NSLocalizedDescriptionKey: [exception reason] }];
+                                        userInfo:@{ NSLocalizedDescriptionKey: [exception reason] ?: @"" }];
         } @finally {
           dispatch_semaphore_signal(semaphore);
         }
     }];
     dispatch_semaphore_wait(semaphore, DISPATCH_TIME_FOREVER);
-    return createFlutterRequestResultWithCode(pairError != nil ? [pairError code] : 0, @{});
+    return createFlutterRequestResultWithCode(pairError != nil ? [pairError code] : 0,
+        pairError != nil ? @{ @"error": [pairError localizedDescription] } : @{});
 }
 
 //static NSString *setDeviceAttestationDelegate(NSString *params) {

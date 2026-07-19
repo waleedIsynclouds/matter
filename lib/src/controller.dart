@@ -946,7 +946,10 @@ class ChipDeviceController implements MethodCallHandler {
     if (result.code == 0) {
       return result.jsonData;
     }
-    throw CallPlatformException("[${result.code}] Call $methodName params $methodParamsJson failed");
+    final nativeError = result.jsonData['error'];
+    throw CallPlatformException(
+        "[${result.code}] Call $methodName params $methodParamsJson failed"
+        "${nativeError != null ? ' - $nativeError' : ''}");
   }
 
 
