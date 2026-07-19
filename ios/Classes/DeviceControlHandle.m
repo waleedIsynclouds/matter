@@ -479,15 +479,21 @@ static NSString *newDeviceControllerCall(NSString *params) {
     FlutterControllerParams *fControlParams = mapFlutterControllerParams(jsonObject);
     ZGMTRDeviceControllerStartupParams *controllerParams =
         mapControllerParams(fControlParams);
-    ZGMTRDeviceController *controller = [[ZGMTRControllerFactory sharedInstance]
+    ZGMTRControllerFactory *factory = [ZGMTRControllerFactory sharedInstance];
+    if (!factory.isRunning) {
+        NSLog(@"[flutter_matter] newDeviceControllerCall: ZGMTRControllerFactory is not running. "
+              @"InitializeZGMTR() must have failed at app launch - check the native log for "
+              @"'InitializeZGMTR:' lines to see why (keychain access / entitlements are the usual cause).");
+    }
+    ZGMTRDeviceController *controller = [factory
         startControllerOnExistingFabric:controllerParams];
     if (controller == nil) {
-        controller = [[ZGMTRControllerFactory sharedInstance]
+        controller = [factory
             startControllerOnNewFabric:controllerParams];
     }
     if (controller == nil) {
         @throw [NSException exceptionWithName:@"newDeviceControllerException"
-                                       reason:@"Create Controller failed"
+                                       reason:[NSString stringWithFormat:@"Create Controller failed (factory.isRunning=%d)", factory.isRunning]
                                      userInfo:nil];
     }
     NSString *uuid = [[controller uniqueIdentifier] UUIDString];

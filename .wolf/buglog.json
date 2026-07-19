@@ -130,6 +130,41 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-19T11:12:52.233Z"
+    },
+    {
+      "id": "bug-009",
+      "timestamp": "2026-07-19T11:25:18.093Z",
+      "error_message": "Significant refactor of ",
+      "file": "ios/Classes/DeviceControlHandle.m",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 13→19 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "m"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T11:25:18.093Z"
+    },
+    {
+      "id": "bug-010",
+      "timestamp": "2026-07-19T00:00:00.000Z",
+      "error_message": "PlatformException(DeviceControlCallException, Create Controller failed, null, null) - commissioning fails with code -2 at 'Controller setup' step",
+      "file": "ios/Classes/Framework Helpers/DefaultsUtils.m, ios/Classes/DeviceControlHandle.m",
+      "root_cause": "newDeviceControllerCall() calls [ZGMTRControllerFactory sharedInstance] startControllerOnExistingFabric:/startControllerOnNewFabric: but never checks that the factory was actually started. Startup happens once at plugin registration via InitializeZGMTR() (FlutterMatterPlugin.m), using the deprecated startup: API which only returns a bare BOOL with no error detail; if it silently fails (e.g. keychain access rejected after switching Xcode signing teams) both fabric-start calls return nil and the exception message gives no clue why.",
+      "fix": "Added NSLog diagnostics in InitializeZGMTR() (factory startup failure, FabricKeys nil, both fabric-start calls nil) and a factory.isRunning check + isRunning value in the thrown exception reason in newDeviceControllerCall(), so the next run's native console reveals the real cause instead of a generic 'Create Controller failed'.",
+      "tags": [
+        "ios",
+        "matter-controller",
+        "keychain",
+        "signing-team",
+        "commissioning",
+        "diagnostics"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T00:00:00.000Z"
     }
   ]
 }

@@ -79,11 +79,13 @@ ZGMTRDeviceController * InitializeZGMTR(void)
         __auto_type * factory = [ZGMTRControllerFactory sharedInstance];
         __auto_type * factoryParams = [[ZGMTRControllerFactoryParams alloc] initWithStorage:storage];
         if (![factory startup:factoryParams]) {
+            NSLog(@"[flutter_matter] InitializeZGMTR: factory startup failed (isRunning=%d)", factory.isRunning);
             return;
         }
 
         __auto_type * keys = [[FabricKeys alloc] init];
         if (keys == nil) {
+            NSLog(@"[flutter_matter] InitializeZGMTR: FabricKeys init returned nil (keychain read/write likely failed)");
             return;
         }
 
@@ -94,6 +96,11 @@ ZGMTRDeviceController * InitializeZGMTR(void)
         sController = [factory startControllerOnExistingFabric:params];
         if (sController == nil) {
             sController = [factory startControllerOnNewFabric:params];
+        }
+        if (sController == nil) {
+            NSLog(@"[flutter_matter] InitializeZGMTR: both startControllerOnExistingFabric and startControllerOnNewFabric returned nil");
+        } else {
+            NSLog(@"[flutter_matter] InitializeZGMTR: factory started, isRunning=%d", factory.isRunning);
         }
     });
 

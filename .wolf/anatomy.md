@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:12:52.227Z
-> Files: 1 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:25:18.087Z
+> Files: 3 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -126,9 +126,11 @@
 
 ## ios/Classes/
 
+- `DeviceControlHandle.m` — 禁用某个警告（在文件顶部添加） (~19372 tok)
 
 ## ios/Classes/Framework Helpers/
 
+- `DefaultsUtils.m` — *    Copyright (c) 2020 Project CHIP Authors (~2549 tok)
 
 ## ios/frameworks/ZGMatter.framework/
 

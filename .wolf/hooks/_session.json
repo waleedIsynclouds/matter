@@ -31,6 +31,41 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-19T11:10:43.420Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:22:42.941Z"
+    },
+    "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:22:52.792Z"
+    },
+    "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/DefaultsUtils.m": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:23:16.747Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/ios/Runner/Runner.entitlements": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:23:53.332Z"
+    },
+    "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/FabricKeys.m": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:24:06.002Z"
+    },
+    "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMTRDeviceControllerFactory.h": {
+      "count": 2,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:24:28.463Z"
+    },
+    "d:/Waleed/flutter projects/matter/ios/Classes/FlutterMatterPlugin.m": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:25:22.973Z"
     }
   },
   "files_written": [
@@ -45,14 +80,28 @@
       "action": "edit",
       "tokens": 864,
       "at": "2026-07-19T11:12:52.230Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/ios/Classes/Framework Helpers/DefaultsUtils.m",
+      "action": "edit",
+      "tokens": 445,
+      "at": "2026-07-19T11:25:09.336Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+      "action": "edit",
+      "tokens": 303,
+      "at": "2026-07-19T11:25:18.090Z"
     }
   ],
   "edit_counts": {
-    "example/lib/commissioning_page.dart": 2
+    "example/lib/commissioning_page.dart": 2,
+    "ios/Classes/Framework Helpers/DefaultsUtils.m": 1,
+    "ios/Classes/DeviceControlHandle.m": 1
   },
   "anatomy_hits": 0,
-  "anatomy_misses": 6,
-  "repeated_reads_warned": 1,
+  "anatomy_misses": 13,
+  "repeated_reads_warned": 2,
   "cerebrum_warnings": 0,
-  "stop_count": 4
+  "stop_count": 7
 }
