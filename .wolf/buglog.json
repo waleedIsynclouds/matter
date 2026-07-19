@@ -217,6 +217,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-19T11:37:22.103Z"
+    },
+    {
+      "id": "bug-014",
+      "timestamp": "2026-07-19T11:45:31.580Z",
+      "error_message": "Missing import: dart:async",
+      "file": "example/lib/commissioning_controller.dart",
+      "root_cause": "Module(s) not imported: dart:async",
+      "fix": "Added import(s) for dart:async",
+      "tags": [
+        "auto-detected",
+        "missing-import",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-19T11:45:31.580Z"
     }
   ]
 }

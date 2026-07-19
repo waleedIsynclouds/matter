@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
@@ -334,6 +335,13 @@ class CommissioningController
       return;
     }
     _finished = true;
+    if (!success) {
+      // The fabric id is fixed (getFabricId()), so a controller left running
+      // after a failed attempt would block every future attempt with
+      // "Create Controller failed". Tear it down now so the user can retry
+      // immediately without restarting the app.
+      unawaited(cleanup());
+    }
     onFinished?.call(success, errorCode);
     onChanged?.call();
   }

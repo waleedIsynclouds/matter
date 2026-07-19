@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:37:31.763Z
-> Files: 5 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T11:45:37.919Z
+> Files: 6 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -113,6 +113,7 @@
 
 ## example/lib/
 
+- `commissioning_controller.dart` — Class: CommissioningSubStep (~4806 tok)
 - `commissioning_page.dart` — Stateful widget: CommissioningPage (~6102 tok)
 
 ## example/test/

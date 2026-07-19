@@ -33,7 +33,7 @@
       "first_read": "2026-07-19T11:10:43.420Z"
     },
     "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-19T11:22:42.941Z"
     },
@@ -68,14 +68,19 @@
       "first_read": "2026-07-19T11:25:22.973Z"
     },
     "d:/Waleed/flutter projects/matter/lib/src/controller.dart": {
-      "count": 2,
-      "tokens": 0,
+      "count": 3,
+      "tokens": 14414,
       "first_read": "2026-07-19T11:31:22.943Z"
     },
     "d:/Waleed/flutter projects/matter/lib/src/exception.dart": {
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-19T11:31:44.875Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/data.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-19T11:41:34.731Z"
     }
   },
   "files_written": [
@@ -126,6 +131,18 @@
       "action": "edit",
       "tokens": 14,
       "at": "2026-07-19T11:37:31.776Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart",
+      "action": "edit",
+      "tokens": 25,
+      "at": "2026-07-19T11:45:31.577Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/commissioning_controller.dart",
+      "action": "edit",
+      "tokens": 144,
+      "at": "2026-07-19T11:45:37.930Z"
     }
   ],
   "edit_counts": {
@@ -133,11 +150,12 @@
     "ios/Classes/Framework Helpers/DefaultsUtils.m": 1,
     "ios/Classes/DeviceControlHandle.m": 2,
     "lib/src/exception.dart": 1,
-    "lib/src/controller.dart": 2
+    "lib/src/controller.dart": 2,
+    "example/lib/commissioning_controller.dart": 2
   },
   "anatomy_hits": 0,
-  "anatomy_misses": 15,
-  "repeated_reads_warned": 4,
+  "anatomy_misses": 16,
+  "repeated_reads_warned": 6,
   "cerebrum_warnings": 0,
-  "stop_count": 9
+  "stop_count": 11
 }
