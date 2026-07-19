@@ -10,7 +10,7 @@ import 'package:flutter_matter_example/ble_manager.dart';
 import 'package:flutter_matter_example/data.dart';
 import 'package:hex/hex.dart';
 import 'package:collection/collection.dart';
-import 'package:pointycastle/export.dart' hide State;
+import 'package:pointycastle/export.dart' hide State, Padding;
 
 enum ProvisioningTransport {
   androidBle,
