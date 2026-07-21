@@ -272,14 +272,25 @@ fun onDeviceControlCall(path: String, params: String, result: MethodChannel.Resu
     }
 }
 
+// ChipPathId.forWildcard() (Dart) encodes as {"id": -1, "type": "wildcard"}.
+// ChipPathId.forId(-1) is a concrete id that matches nothing, so a wildcard
+// path built that way silently returns no data. Route through forWildcard()
+// when the JSON says so.
+private fun mapChipPathId(jsonObject: JSONObject?): ChipPathId {
+    if (jsonObject == null || jsonObject.optString("type") == "wildcard") {
+        return ChipPathId.forWildcard()
+    }
+    return ChipPathId.forId(jsonObject.optLong("id"))
+}
+
 private fun mapChipAttributePath(jsonObject: JSONObject): ChipAttributePath {
     val endpointId = jsonObject.optJSONObject("endpointId")
     val clusterId = jsonObject.optJSONObject("clusterId")
     val attributeId = jsonObject.optJSONObject("attributeId")
     return ChipAttributePath.newInstance(
-        ChipPathId.forId(endpointId.optLong("id")),
-        ChipPathId.forId(clusterId.optLong("id")),
-        ChipPathId.forId(attributeId.optLong("id"))
+        mapChipPathId(endpointId),
+        mapChipPathId(clusterId),
+        mapChipPathId(attributeId)
     )
 }
 
@@ -310,12 +321,12 @@ private fun mapAttributeWriteRequest(jsonObject: JSONObject): AttributeWriteRequ
 private fun mapChipEventPath(jsonObject: JSONObject): ChipEventPath {
     val endpointId = jsonObject.optJSONObject("endpointId")
     val clusterId = jsonObject.optJSONObject("clusterId")
-    val attributeId = jsonObject.optJSONObject("eventId")
+    val eventId = jsonObject.optJSONObject("eventId")
     val isUrgent = jsonObject.optBoolean("isUrgent")
     return ChipEventPath.newInstance(
-        ChipPathId.forId(endpointId.optLong("id")),
-        ChipPathId.forId(clusterId.optLong("id")),
-        ChipPathId.forId(attributeId.optLong("id")),
+        mapChipPathId(endpointId),
+        mapChipPathId(clusterId),
+        mapChipPathId(eventId),
         isUrgent
     )
 }

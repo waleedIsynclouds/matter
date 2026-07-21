@@ -1,7 +1,7 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-19T12:09:53.521Z
-> Files: 11 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-21T11:07:58.718Z
+> Files: 13 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
@@ -14,6 +14,7 @@
 
 ## C:/Users/dedoa/.claude/plans/
 
+- `what-other-features-we-fancy-mango.md` — Matter feature roadmap for the example app — dynamic data model + 4 phases (~4718 tok)
 
 ## android/
 
@@ -26,6 +27,7 @@
 
 ## android/src/main/kotlin/com/tyx/flutter_matter/
 
+- `DeviceControl.kt` — KeypairDelegateWarp: getDeviceController, CSRInfo, AttestationInfo, ICDDeviceInfo (~17863 tok)
 
 ## android/src/test/kotlin/com/tyx/flutter_matter/
 
@@ -117,9 +119,9 @@
 
 - `commissioning_controller.dart` — Class: CommissioningSubStep (~4853 tok)
 - `commissioning_page.dart` — Stateful widget: CommissioningPage (~6102 tok)
-- `control_page.dart` — Stateful widget: ControlPage (~6569 tok)
-- `data.dart` — Class: MyKeypairDelegate (~2551 tok)
-- `home_page.dart` — Stateful widget: HomePage (~655 tok)
+- `control_page.dart` — Stateful widget: ControlPage (~7691 tok)
+- `data.dart` — Class: MyKeypairDelegate (~3158 tok)
+- `home_page.dart` — Stateful widget: HomePage (~775 tok)
 
 ## example/test/
 
@@ -132,7 +134,7 @@
 
 ## ios/Classes/
 
-- `DeviceControlHandle.m` — 禁用某个警告（在文件顶部添加） (~19423 tok)
+- `DeviceControlHandle.m` — 禁用某个警告（在文件顶部添加） (~19586 tok)
 
 ## ios/Classes/Framework Helpers/
 

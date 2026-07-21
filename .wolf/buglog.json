@@ -329,6 +329,105 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-19T12:09:53.539Z"
+    },
+    {
+      "id": "bug-021",
+      "timestamp": "2026-07-20T09:48:42.220Z",
+      "error_message": "Significant refactor of ",
+      "file": "android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+      "root_cause": "3 lines replaced/restructured",
+      "fix": "Rewrote 10→21 lines (3 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "kt"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T09:48:42.220Z"
+    },
+    {
+      "id": "bug-022",
+      "timestamp": "2026-07-20T00:00:00.000Z",
+      "error_message": "Wildcard subscribe (Info tab live feed: all endpoints/clusters/attributes/events) never delivers reports, while concrete-path subscribe (On/Off tab) works fine",
+      "file": "ios/Classes/DeviceControlHandle.m, android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+      "root_cause": "ChipPathId.forWildcard() (Dart) encodes as {\"id\": -1, \"type\": \"wildcard\"}. Both native bridges read only the \"id\" field when building attribute/event paths for subscribe and read, ignoring \"type\" entirely, so a wildcard request got built as a concrete path with id=-1 - which the underlying Matter SDKs (iOS ZGMTRAttributeRequestPath/ZGMTREventRequestPath, Android ChipAttributePath/ChipEventPath) treat as nil=wildcard only when the id argument itself is nil/ChipPathId.forWildcard(), not -1. A concrete id of -1 matches no real endpoint/cluster/attribute/event, so the subscription/read silently returns nothing.",
+      "fix": "iOS: added pathIdFromJson() helper that returns nil when type==\"wildcard\", used in the subscribe and read handlers' attribute/event path construction. Android: added mapChipPathId() helper that calls ChipPathId.forWildcard() when type==\"wildcard\", used inside mapChipAttributePath()/mapChipEventPath() which both subscribe and read already funnel through.",
+      "tags": [
+        "ios",
+        "android",
+        "matter-subscribe",
+        "wildcard",
+        "native-bridge",
+        "chippathid"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T00:00:00.000Z"
+    },
+    {
+      "id": "bug-023",
+      "timestamp": "2026-07-20T09:50:02.793Z",
+      "error_message": "Null/undefined access in ",
+      "file": "example/lib/data.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T09:50:02.793Z"
+    },
+    {
+      "id": "bug-024",
+      "timestamp": "2026-07-20T09:50:21.427Z",
+      "error_message": "Missing await",
+      "file": "example/lib/data.dart",
+      "root_cause": "Async call without await — returned Promise instead of value",
+      "fix": "Added await to async call",
+      "tags": [
+        "auto-detected",
+        "async-fix",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T09:50:21.427Z"
+    },
+    {
+      "id": "bug-025",
+      "timestamp": "2026-07-20T09:50:37.235Z",
+      "error_message": "Null/undefined access in ",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check)",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T09:50:37.235Z"
+    },
+    {
+      "id": "bug-026",
+      "timestamp": "2026-07-20T09:51:02.311Z",
+      "error_message": "Significant refactor of ",
+      "file": "example/lib/home_page.dart",
+      "root_cause": "2 lines replaced/restructured",
+      "fix": "Rewrote 14→23 lines (2 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-20T09:51:02.311Z"
     }
   ]
 }

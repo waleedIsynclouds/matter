@@ -23,6 +23,21 @@ static NSMutableDictionary *controls = nil;
 static NSMutableDictionary *onNOCChainGenerationCompletes = nil;
 static dispatch_queue_t connectDeviceQueue = nil;
 
+// ChipPathId.forWildcard() (Dart) encodes as {"id": -1, "type": "wildcard"}.
+// The native path constructors (ZGMTRAttributeRequestPath / ZGMTREventRequestPath)
+// treat a nil id as "match anything" - passing the literal -1 instead means
+// the path matches nothing, so wildcard subscribe/read silently returns no data.
+static NSNumber * _Nullable pathIdFromJson(NSDictionary * pathIdJson) {
+    if (pathIdJson == nil || [pathIdJson isEqual:[NSNull null]]) {
+        return nil;
+    }
+    NSString * type = [pathIdJson objectForKey:@"type"];
+    if ([type isEqualToString:@"wildcard"]) {
+        return nil;
+    }
+    return [pathIdJson objectForKey:@"id"];
+}
+
 /////////// Callbacks
 
 @implementation PairingDelegateWarp
@@ -951,9 +966,9 @@ static NSString * subscribe(NSString * params) {
        attributePaths = [NSMutableArray array];
        for (NSUInteger i = 0; i < attributePathsJson.count; i++) {
            NSDictionary * attributePath = attributePathsJson[i];
-           NSNumber * endpointId = [[attributePath objectForKey:@"endpointId"] objectForKey:@"id"];
-           NSNumber * clusterId = [[attributePath objectForKey:@"clusterId"] objectForKey:@"id"];
-           NSNumber * attributeId = [[attributePath objectForKey:@"attributeId"] objectForKey:@"id"];
+           NSNumber * endpointId = pathIdFromJson([attributePath objectForKey:@"endpointId"]);
+           NSNumber * clusterId = pathIdFromJson([attributePath objectForKey:@"clusterId"]);
+           NSNumber * attributeId = pathIdFromJson([attributePath objectForKey:@"attributeId"]);
            [attributePaths addObject:[ZGMTRAttributeRequestPath requestPathWithEndpointID:endpointId clusterID:clusterId attributeID:attributeId]];
        }
    }
@@ -962,9 +977,9 @@ static NSString * subscribe(NSString * params) {
        eventPaths = [NSMutableArray array];
        for (NSUInteger i = 0; i < eventPathsJson.count; i++) {
            NSDictionary * eventPath = eventPathsJson[i];
-           NSNumber * endpointId = [[eventPath objectForKey:@"endpointId"] objectForKey:@"id"];
-           NSNumber * clusterId = [[eventPath objectForKey:@"clusterId"] objectForKey:@"id"];
-           NSNumber * eventId = [[eventPath objectForKey:@"eventId"] objectForKey:@"id"];
+           NSNumber * endpointId = pathIdFromJson([eventPath objectForKey:@"endpointId"]);
+           NSNumber * clusterId = pathIdFromJson([eventPath objectForKey:@"clusterId"]);
+           NSNumber * eventId = pathIdFromJson([eventPath objectForKey:@"eventId"]);
            [eventPaths addObject:[ZGMTREventRequestPath requestPathWithEndpointID:endpointId clusterID:clusterId eventID:eventId]];
        }
    }
@@ -1032,9 +1047,9 @@ static NSString * readRequest(NSString * params) {
         attributePaths = [NSMutableArray array];
         for (NSUInteger i = 0; i < attributePathsJson.count; i++) {
             NSDictionary * attributePath = attributePathsJson[i];
-            NSNumber * endpointId = [[attributePath objectForKey:@"endpointId"] objectForKey:@"id"];
-            NSNumber * clusterId = [[attributePath objectForKey:@"clusterId"] objectForKey:@"id"];
-            NSNumber * attributeId = [[attributePath objectForKey:@"attributeId"] objectForKey:@"id"];
+            NSNumber * endpointId = pathIdFromJson([attributePath objectForKey:@"endpointId"]);
+            NSNumber * clusterId = pathIdFromJson([attributePath objectForKey:@"clusterId"]);
+            NSNumber * attributeId = pathIdFromJson([attributePath objectForKey:@"attributeId"]);
             [attributePaths addObject:[ZGMTRAttributeRequestPath requestPathWithEndpointID:endpointId clusterID:clusterId attributeID:attributeId]];
         }
     }
@@ -1043,13 +1058,13 @@ static NSString * readRequest(NSString * params) {
         eventPaths = [NSMutableArray array];
         for (NSUInteger i = 0; i < eventPathsJson.count; i++) {
             NSDictionary * eventPath = eventPathsJson[i];
-            NSNumber * endpointId = [[eventPath objectForKey:@"endpointId"] objectForKey:@"id"];
-            NSNumber * clusterId = [[eventPath objectForKey:@"clusterId"] objectForKey:@"id"];
-            NSNumber * eventId = [[eventPath objectForKey:@"eventId"] objectForKey:@"id"];
+            NSNumber * endpointId = pathIdFromJson([eventPath objectForKey:@"endpointId"]);
+            NSNumber * clusterId = pathIdFromJson([eventPath objectForKey:@"clusterId"]);
+            NSNumber * eventId = pathIdFromJson([eventPath objectForKey:@"eventId"]);
             [eventPaths addObject:[ZGMTREventRequestPath requestPathWithEndpointID:endpointId clusterID:clusterId eventID:eventId]];
         }
     }
-    
+
     ZGMTRReadParams * readParams = [ZGMTRReadParams alloc];
     readParams.fabricFiltered = isFabricFiltered;
     readParams.minEventNumber = eventMin;

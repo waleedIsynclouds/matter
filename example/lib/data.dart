@@ -189,8 +189,43 @@ class Device {
   final int? productId;
   final int? discriminator;
   final DateTime? pairedAt;
+  // Filled in later from the device's Basic Information cluster once the
+  // user connects and the Info tab reads it - not known at commissioning time.
+  final String? vendorName;
+  final String? productName;
+  final String? softwareVersion;
+  final DateTime? lastSeenAt;
 
-  Device(this.nodeId, {this.vendorId, this.productId, this.discriminator, this.pairedAt});
+  Device(
+    this.nodeId, {
+    this.vendorId,
+    this.productId,
+    this.discriminator,
+    this.pairedAt,
+    this.vendorName,
+    this.productName,
+    this.softwareVersion,
+    this.lastSeenAt,
+  });
+
+  Device copyWith({
+    String? vendorName,
+    String? productName,
+    String? softwareVersion,
+    DateTime? lastSeenAt,
+  }) {
+    return Device(
+      nodeId,
+      vendorId: vendorId,
+      productId: productId,
+      discriminator: discriminator,
+      pairedAt: pairedAt,
+      vendorName: vendorName ?? this.vendorName,
+      productName: productName ?? this.productName,
+      softwareVersion: softwareVersion ?? this.softwareVersion,
+      lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+    );
+  }
 
   toJson() {
     return {
@@ -199,6 +234,10 @@ class Device {
       'productId': productId,
       'discriminator': discriminator,
       'pairedAt': pairedAt?.toIso8601String(),
+      'vendorName': vendorName,
+      'productName': productName,
+      'softwareVersion': softwareVersion,
+      'lastSeenAt': lastSeenAt?.toIso8601String(),
     };
   }
 
@@ -209,6 +248,10 @@ class Device {
       productId: json['productId'],
       discriminator: json['discriminator'],
       pairedAt: json['pairedAt'] == null ? null : DateTime.tryParse(json['pairedAt']),
+      vendorName: json['vendorName'],
+      productName: json['productName'],
+      softwareVersion: json['softwareVersion'],
+      lastSeenAt: json['lastSeenAt'] == null ? null : DateTime.tryParse(json['lastSeenAt']),
     );
   }
 }
@@ -256,6 +299,38 @@ Future<void> saveDevice(Device device) async {
   devicesList.add(device.toJson());
   await sp.setInt(key_max_nodeId, device.nodeId);
   await sp.setString(key_devices, jsonEncode(devicesList)).then((value) {
+    deviceChangeNotifier.add(null);
+    return value;
+  });
+}
+
+Future<void> updateDeviceInfo(
+  int nodeId, {
+  String? vendorName,
+  String? productName,
+  String? softwareVersion,
+}) async {
+  final sp = await SharedPreferences.getInstance();
+  final devices = sp.getString(key_devices);
+  final devicesList = devices == null ? [] : jsonDecode(devices).cast<Map<String, dynamic>>();
+  var changed = false;
+  final updatedList = devicesList.map((json) {
+    if (json['nodeId'] != nodeId) {
+      return json;
+    }
+    changed = true;
+    final updated = Device.fromJson(json.cast<String, dynamic>()).copyWith(
+          vendorName: vendorName,
+          productName: productName,
+          softwareVersion: softwareVersion,
+          lastSeenAt: DateTime.now(),
+        );
+    return updated.toJson();
+  }).toList();
+  if (!changed) {
+    return;
+  }
+  await sp.setString(key_devices, jsonEncode(updatedList)).then((value) {
     deviceChangeNotifier.add(null);
     return value;
   });

@@ -12,26 +12,30 @@ import 'package:hex/hex.dart';
 import 'package:collection/collection.dart';
 import 'package:pointycastle/export.dart' hide State, Padding;
 
-enum ProvisioningTransport {
-  androidBle,
-  onNetwork,
-}
+enum ProvisioningTransport { androidBle, onNetwork }
 
 class DeviceProvisioningPage extends StatefulWidget {
   final OnboardingPayload payload;
   final String onboardingPayload;
   final WiFiCredentials wiFiCredentials;
 
-  const DeviceProvisioningPage({super.key, required this.payload, required this.wiFiCredentials, required this.onboardingPayload});
+  const DeviceProvisioningPage({
+    super.key,
+    required this.payload,
+    required this.wiFiCredentials,
+    required this.onboardingPayload,
+  });
 
   @override
   State<DeviceProvisioningPage> createState() => _DeviceProvisioningPageState();
-  
- 
 }
 
-class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> implements NOCChainIssuer, BlePlatformDelegate, CompletionListener, DeviceAttestationDelegate {
-  
+class _DeviceProvisioningPageState extends State<DeviceProvisioningPage>
+    implements
+        NOCChainIssuer,
+        BlePlatformDelegate,
+        CompletionListener,
+        DeviceAttestationDelegate {
   BLEManager? bleManager;
   int? connectId;
   bool isProvisioning = false;
@@ -44,75 +48,94 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
   ChipDeviceController? deviceController;
   late AsymmetricKeyPair<ECPublicKey, ECPrivateKey> keypair;
   late List<Uint8List> cert;
-  
+
   @override
   void dispose() {
     super.dispose();
     BleManager.disconnectAll();
     if (nodeId != null) {
-      deviceController?.stopDevicePairing(nodeId!).whenComplete(() => deviceController?.deleteDeviceController());
+      deviceController
+          ?.stopDevicePairing(nodeId!)
+          .whenComplete(() => deviceController?.deleteDeviceController());
     }
     if (connectId != null) {
       bleManager?.disconnect(connectId!);
     }
   }
-  
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text(isProvisioning ? 'Provisioning...' : "PairDevice")),
-      body: Builder(builder: (_) {
-        if (!isProvisioning && !isFinish) {
-        return Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Text('Vendor: ${widget.payload.vendorId.toRadixString(16)}\nProduct: ${widget.payload.productId.toRadixString(16)}\nSetup code: ${widget.payload.setupPinCode.toRadixString(16)}'),
-            SizedBox(height: 16,),
-            Align(
-              alignment: Alignment.center,
-              child: Column(
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  ElevatedButton(
-                    onPressed: () async {
-                      startProvisioning(ProvisioningTransport.androidBle);
-                    },
-                    child: const Text('Start provisioning with BLE'),
+      appBar: AppBar(
+        title: Text(isProvisioning ? 'Provisioning...' : "PairDevice"),
+      ),
+      body: Builder(
+        builder: (_) {
+          if (!isProvisioning && !isFinish) {
+            return Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Text(
+                  'Vendor: ${widget.payload.vendorId.toRadixString(16)}\nProduct: ${widget.payload.productId.toRadixString(16)}\nSetup code: ${widget.payload.setupPinCode.toRadixString(16)}',
+                ),
+                SizedBox(height: 16),
+                Align(
+                  alignment: Alignment.center,
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      ElevatedButton(
+                        onPressed: () async {
+                          startProvisioning(ProvisioningTransport.androidBle);
+                        },
+                        child: const Text('Start provisioning with BLE'),
+                      ),
+                      const SizedBox(height: 8),
+                      ElevatedButton(
+                        onPressed: () async {
+                          startProvisioning(ProvisioningTransport.onNetwork);
+                        },
+                        child: const Text('Start on-network simulator'),
+                      ),
+                    ],
                   ),
-                  const SizedBox(height: 8),
-                  ElevatedButton(
-                    onPressed: () async {
-                      startProvisioning(ProvisioningTransport.onNetwork);
-                    },
-                    child: const Text('Start on-network simulator'),
+                ),
+              ],
+            );
+          }
+          return Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                if (!isFinish)
+                  Text(
+                    'Current Step: ${stage}',
+                    style: TextStyle(fontSize: 20),
                   ),
-                ],
-              ),
-            )
-          ],
-        );
-      }
-      return Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            if (!isFinish)
-              Text('Current Step: ${stage}', style: TextStyle(fontSize: 20),),
-            if (!isFinish && transport == ProvisioningTransport.onNetwork)
-              const Padding(
-                padding: EdgeInsets.only(top: 8),
-                child: Text('BLE skipped. Commissioning with onboarding code.'),
-              ),
-            if (isFinish)
-              Text('Provisioning${errorCode == 0 ? 'success' : 'fail'} code $errorCode', style: TextStyle(fontSize: 20),),
-            if (isFinish)
-              ElevatedButton(onPressed: () {
-                Navigator.pop(context);
-              }, child: Text('Back')),
-          ],
-        ),
-      );
-    }),
+                if (!isFinish && transport == ProvisioningTransport.onNetwork)
+                  const Padding(
+                    padding: EdgeInsets.only(top: 8),
+                    child: Text(
+                      'BLE skipped. Commissioning with onboarding code.',
+                    ),
+                  ),
+                if (isFinish)
+                  Text(
+                    'Provisioning${errorCode == 0 ? 'success' : 'fail'} code $errorCode',
+                    style: TextStyle(fontSize: 20),
+                  ),
+                if (isFinish)
+                  ElevatedButton(
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                    child: Text('Back'),
+                  ),
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -124,13 +147,17 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
           ? 'Preparing on-network commissioning...'
           : 'Connecting to the device....';
     });
-    
-    // vendorId and productId are all 0, it's a share code 
-    bool isShare = widget.payload.vendorId == 0 && widget.payload.productId == 0x00;
-    final shouldUseAndroidBle = selectedTransport == ProvisioningTransport.androidBle && Platform.isAndroid && !isShare;
+
+    // vendorId and productId are all 0, it's a share code
+    bool isShare =
+        widget.payload.vendorId == 0 && widget.payload.productId == 0x00;
+    final shouldUseAndroidBle =
+        selectedTransport == ProvisioningTransport.androidBle &&
+        Platform.isAndroid &&
+        !isShare;
     // Onlay Android can use custom ble stack
     // if you not use custom ble stack, unnecessary care about the ble code
-    if (shouldUseAndroidBle) { 
+    if (shouldUseAndroidBle) {
       final device = await BleManager.getDevice(widget.payload);
       print("find device $device");
       if (device != null) {
@@ -154,11 +181,17 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
       }
 
       final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull(
-        (element) => element.serviceUuid == BleManager.matter_uuid);
+        (element) => element.serviceUuid == BleManager.matter_uuid,
+      );
       service!.characteristics.forEach((chr) {
         final ss = chr.onValueReceived.listen((event) {
           print('onValueReceived ${chr.characteristicUuid} ${event}');
-          BLELayerPlatform.handleIndicationReceived(connectId, Uint8List.fromList(BleManager.matter_uuid.bytes), Uint8List.fromList(chr.characteristicUuid.bytes), Uint8List.fromList(event)).then((value) {
+          BLELayerPlatform.handleIndicationReceived(
+            connectId,
+            Uint8List.fromList(BleManager.matter_uuid.bytes),
+            Uint8List.fromList(chr.characteristicUuid.bytes),
+            Uint8List.fromList(event),
+          ).then((value) {
             print('handleIndicationReceived $value');
           });
         });
@@ -175,35 +208,41 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
     final cp = ControllerParams(
       skipCommissioningComplete: false,
       fabricId: fabricId!,
-      keypairDelegate: MyKeypairDelegate(publicKey: kp.publicKey, privateKey: kp.privateKey),
+      keypairDelegate: MyKeypairDelegate(
+        publicKey: kp.publicKey,
+        privateKey: kp.privateKey,
+      ),
       ipk: defaultIpk,
       rootCertificate: cert[0],
       intermediateCertificate: cert[0],
-      operationalCertificate: cert[1]
+      operationalCertificate: cert[1],
     );
-    
+
     deviceController = await ChipDeviceController.newControllerIfNotExist(cp);
     deviceController!.setNocChainIssuer(this);
     setState(() {
       stage = 'startProvisioning';
     });
     nodeId = await nextNodeId();
-    await deviceController!.pairDevice(
-      nodeId!, 
-      shouldUseAndroidBle ? connectId : null,
-      widget.payload.setupPinCode, 
-      widget.onboardingPayload,
-      null,
-      NetworkCredentials(wifiCredentials: widget.wiFiCredentials),
-      attestationDelegate: this,
-      completionListener: this
-    ).catchError((e,s) {
-      print('pairDevice error $e $s');
-      setState(() {
-        errorCode = -2;
-        isFinish = true;
-      });
-    });
+    await deviceController!
+        .pairDevice(
+          nodeId!,
+          shouldUseAndroidBle ? connectId : null,
+          widget.payload.setupPinCode,
+          widget.onboardingPayload,
+          null,
+          NetworkCredentials(wifiCredentials: widget.wiFiCredentials),
+          attestationDelegate: this,
+          completionListener: this,
+          ecosystemName: 'SyncN Ecosystem',
+        )
+        .catchError((e, s) {
+          print('pairDevice error $e $s');
+          setState(() {
+            errorCode = -2;
+            isFinish = true;
+          });
+        });
   }
 
   /// CompletionListener callback start ==================================
@@ -211,7 +250,7 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
   void onCloseBleComplete() {
     print('onCloseBleComplete');
   }
-  
+
   @override
   void onCommissioningComplete(int? nodeId, int errorCode) {
     print('onCommissioningComplete $nodeId $errorCode');
@@ -222,25 +261,25 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
       isFinish = true;
     });
   }
-  
+
   @override
   void onCommissioningStatusUpdate(int nodeId, String stage, int errorCode) {
     print('onCommissioningStatusUpdate $nodeId $stage $errorCode');
-     setState(() {
+    setState(() {
       this.stage = stage;
-     });
+    });
   }
-  
+
   @override
   void onConnectDeviceComplete() {
     print('onConnectDeviceComplete');
   }
-  
+
   @override
   void onError(Exception error) {
     print('onError $error');
   }
-  
+
   @override
   void onICDRegistrationInfoRequired() {
     print('onICDRegistrationInfoRequired');
@@ -248,19 +287,21 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
 
   @override
   void onICDRegistrationComplete(int errorCode, ICDDeviceInfo? icdDeviceInfo) {
-    print('onICDRegistrationComplete errorCode=$errorCode icdDeviceInfo=$icdDeviceInfo');
+    print(
+      'onICDRegistrationComplete errorCode=$errorCode icdDeviceInfo=$icdDeviceInfo',
+    );
   }
-  
+
   @override
   void onNotifyChipConnectionClosed() {
     print('onNotifyChipConnectionClosed');
   }
-  
+
   @override
   void onOpCSRGenerationComplete(Uint8List csr) {
     print('onOpCSRGenerationComplete ${base64.encode(csr)}');
   }
-  
+
   @override
   void onPairingComplete(int errorCode) {
     print('onPairingComplete $errorCode');
@@ -272,17 +313,24 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
       });
     }
   }
-  
+
   @override
   void onPairingDeleted(int errorCode) {
     print('onPairingDeleted $errorCode');
   }
-  
+
   @override
-  void onReadCommissioningInfo(int vendorId, int productId, int wifiEndpointId, int threadEndpointId) {
-    print('onReadCommissioningInfo $vendorId $productId $wifiEndpointId $threadEndpointId');
+  void onReadCommissioningInfo(
+    int vendorId,
+    int productId,
+    int wifiEndpointId,
+    int threadEndpointId,
+  ) {
+    print(
+      'onReadCommissioningInfo $vendorId $productId $wifiEndpointId $threadEndpointId',
+    );
   }
-  
+
   @override
   void onStatusUpdate(int status) {
     print('onStatusUpdate $status');
@@ -290,20 +338,19 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
 
   /// CompletionListener callback end ==================================
 
-
-
-
   /// DeviceAttestationDelegate callback start ==================================
-  
+
   @override
-  void onDeviceAttestationCompleted(int devicePtr, AttestationInfo? attestationInfo, int errorCode) {
+  void onDeviceAttestationCompleted(
+    int devicePtr,
+    AttestationInfo? attestationInfo,
+    int errorCode,
+  ) {
     print('onDeviceAttestationCompleted $errorCode');
     deviceController!.continueCommissioning(devicePtr, true);
   }
 
   /// DeviceAttestationDelegate callback end ==================================
-  
-
 
   /// BlePlatformDelegate callback start ==================================
 
@@ -312,112 +359,188 @@ class _DeviceProvisioningPageState extends State<DeviceProvisioningPage> impleme
     await BleManager.getConnDevice()!.disconnect();
     return true;
   }
-  
+
   @override
   Future<int> getMTU(connObj) async {
     print('getMTU $connObj -> ${BleManager.getConnDevice()!.mtuNow}');
     return BleManager.getConnDevice()!.mtuNow;
   }
-  
+
   @override
-  Future<bool> sendIndication(connObj, Uint8List svcId, Uint8List charId, Uint8List pBuf) {
+  Future<bool> sendIndication(
+    connObj,
+    Uint8List svcId,
+    Uint8List charId,
+    Uint8List pBuf,
+  ) {
     // TODO: implement sendIndication
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<bool> sendReadRequest(connObj, Uint8List svcId, Uint8List charId, Uint8List pBuf) {
+  Future<bool> sendReadRequest(
+    connObj,
+    Uint8List svcId,
+    Uint8List charId,
+    Uint8List pBuf,
+  ) {
     // TODO: implement sendReadRequest
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<bool> sendReadResponse(connObj, requestContext, Uint8List svcId, Uint8List charId) {
+  Future<bool> sendReadResponse(
+    connObj,
+    requestContext,
+    Uint8List svcId,
+    Uint8List charId,
+  ) {
     // TODO: implement sendReadResponse
     throw UnimplementedError();
   }
-  
+
   @override
-  Future<bool> sendWriteRequest(connObj, Uint8List svcId, Uint8List charId, Uint8List pBuf) async {
-    print("sendWriteRequest $connObj ${HEX.encode(svcId)} ${HEX.encode(charId)} ${HEX.encode(pBuf)}");
+  Future<bool> sendWriteRequest(
+    connObj,
+    Uint8List svcId,
+    Uint8List charId,
+    Uint8List pBuf,
+  ) async {
+    print(
+      "sendWriteRequest $connObj ${HEX.encode(svcId)} ${HEX.encode(charId)} ${HEX.encode(pBuf)}",
+    );
     bool writeSuccess = false;
-    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull((element) => element.serviceUuid == Guid.fromBytes(svcId));
-    final char = service?.characteristics.firstWhereOrNull((element) => element.characteristicUuid == Guid.fromBytes(charId));
+    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull(
+      (element) => element.serviceUuid == Guid.fromBytes(svcId),
+    );
+    final char = service?.characteristics.firstWhereOrNull(
+      (element) => element.characteristicUuid == Guid.fromBytes(charId),
+    );
     if (char != null) {
-      await char.write(pBuf, withoutResponse: false)
-        .then((value) {
-          writeSuccess = true;
-          Future(() {
-            BLELayerPlatform.handleWriteConfirmation(connObj, svcId, charId, true);
+      await char
+          .write(pBuf, withoutResponse: false)
+          .then((value) {
+            writeSuccess = true;
+            Future(() {
+              BLELayerPlatform.handleWriteConfirmation(
+                connObj,
+                svcId,
+                charId,
+                true,
+              );
+            });
+            return value;
+          })
+          .catchError((_) {
+            writeSuccess = false;
+            Future(() {
+              BLELayerPlatform.handleWriteConfirmation(
+                connObj,
+                svcId,
+                charId,
+                false,
+              );
+            });
           });
-          return value;
-        })
-        .catchError((_) {
-          writeSuccess = false;
-          Future(() {
-            BLELayerPlatform.handleWriteConfirmation(connObj, svcId, charId, false);
-          });
-        });
     }
     return writeSuccess;
   }
-  
+
   @override
-  Future<bool> subscribeCharacteristic(connObj, Uint8List svcId, Uint8List charId) async {
-    print("subscribeCharacteristic $connObj ${HEX.encode(svcId)} ${HEX.encode(charId)}");
-    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull((element) => element.serviceUuid == Guid.fromBytes(svcId));
-    final char = service?.characteristics.firstWhereOrNull((element) => element.characteristicUuid == Guid.fromBytes(charId));
+  Future<bool> subscribeCharacteristic(
+    connObj,
+    Uint8List svcId,
+    Uint8List charId,
+  ) async {
+    print(
+      "subscribeCharacteristic $connObj ${HEX.encode(svcId)} ${HEX.encode(charId)}",
+    );
+    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull(
+      (element) => element.serviceUuid == Guid.fromBytes(svcId),
+    );
+    final char = service?.characteristics.firstWhereOrNull(
+      (element) => element.characteristicUuid == Guid.fromBytes(charId),
+    );
     return await char?.setNotifyValue(true).catchError((e) => false).then((v) {
-      Future(() {
-        BLELayerPlatform.handleSubscribeComplete(connObj, svcId, charId, v);
-      });
-      return v;
-    }) ?? false;
+          Future(() {
+            BLELayerPlatform.handleSubscribeComplete(connObj, svcId, charId, v);
+          });
+          return v;
+        }) ??
+        false;
   }
-  
+
   @override
-  Future<bool> unsubscribeCharacteristic(connObj, Uint8List svcId, Uint8List charId) async {
-    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull((element) => element.serviceUuid == Guid.fromBytes(svcId));
-    final char = service?.characteristics.firstWhereOrNull((element) => element.characteristicUuid == Guid.fromBytes(charId));
+  Future<bool> unsubscribeCharacteristic(
+    connObj,
+    Uint8List svcId,
+    Uint8List charId,
+  ) async {
+    final service = BleManager.getConnDevice()!.servicesList.firstWhereOrNull(
+      (element) => element.serviceUuid == Guid.fromBytes(svcId),
+    );
+    final char = service?.characteristics.firstWhereOrNull(
+      (element) => element.characteristicUuid == Guid.fromBytes(charId),
+    );
     return await char?.setNotifyValue(false).catchError((e) => false) ?? false;
   }
 
   /// BlePlatformDelegate callback end ==================================
 
-
-
-
-  /// NOCChainIssuer callback start ================================== 
+  /// NOCChainIssuer callback start ==================================
   @override
-  void onNOCChainGenerationNeeded(onNOCChainGenerationCompleteHandle, CSRInfo csrInfo, AttestationInfo attestationInfo) async {
+  void onNOCChainGenerationNeeded(
+    onNOCChainGenerationCompleteHandle,
+    CSRInfo csrInfo,
+    AttestationInfo attestationInfo,
+  ) async {
     final pubKey = await deviceController!.publicKeyFromCSR(csrInfo.csr);
-    final kpd = MyKeypairDelegate(publicKey: keypair.publicKey, privateKey: keypair.privateKey);
+    final kpd = MyKeypairDelegate(
+      publicKey: keypair.publicKey,
+      privateKey: keypair.privateKey,
+    );
+
     /// generateNOCChain
     final deviceNOC = await ChipDeviceController.createOperationalCertificate(
-      kpd, 
-      cert[0], 
-      pubKey, 
-      fabricId!, 
-      nodeId!, 
-      null
+      kpd,
+      cert[0],
+      pubKey,
+      fabricId!,
+      nodeId!,
+      null,
     );
-    deviceController!.onNOCChainGeneration(ControllerParams(
-      rootCertificate: cert[0],
-      intermediateCertificate: cert[0],
-      operationalCertificate: deviceNOC,
-      adminSubject: kTestControllerNodeId,
-      keypairDelegate: kpd,
-      ipk: getDefaultIpk(),
-    ), onNOCChainGenerationCompleteHandle: onNOCChainGenerationCompleteHandle);
+    deviceController!.onNOCChainGeneration(
+      ControllerParams(
+        rootCertificate: cert[0],
+        intermediateCertificate: cert[0],
+        operationalCertificate: deviceNOC,
+        adminSubject: kTestControllerNodeId,
+        keypairDelegate: kpd,
+        ipk: getDefaultIpk(),
+      ),
+      onNOCChainGenerationCompleteHandle: onNOCChainGenerationCompleteHandle,
+    );
   }
 }
 
 Uint8List getDefaultIpk() {
   List<int> mDefaultIpk = [
-    't'.codeUnitAt(0), 'e'.codeUnitAt(0), 'm'.codeUnitAt(0), 'p'.codeUnitAt(0),
-    'o'.codeUnitAt(0), 'r'.codeUnitAt(0), 'a'.codeUnitAt(0), 'r'.codeUnitAt(0),
-    'y'.codeUnitAt(0), ' '.codeUnitAt(0), 'i'.codeUnitAt(0), 'p'.codeUnitAt(0),
-    'k'.codeUnitAt(0), ' '.codeUnitAt(0), '0'.codeUnitAt(0), '1'.codeUnitAt(0)
+    't'.codeUnitAt(0),
+    'e'.codeUnitAt(0),
+    'm'.codeUnitAt(0),
+    'p'.codeUnitAt(0),
+    'o'.codeUnitAt(0),
+    'r'.codeUnitAt(0),
+    'a'.codeUnitAt(0),
+    'r'.codeUnitAt(0),
+    'y'.codeUnitAt(0),
+    ' '.codeUnitAt(0),
+    'i'.codeUnitAt(0),
+    'p'.codeUnitAt(0),
+    'k'.codeUnitAt(0),
+    ' '.codeUnitAt(0),
+    '0'.codeUnitAt(0),
+    '1'.codeUnitAt(0),
   ];
   return Uint8List.fromList(mDefaultIpk);
 }

@@ -2,14 +2,14 @@
   "version": 1,
   "created_at": "2026-07-12T21:32:26.332Z",
   "lifetime": {
-    "total_tokens_estimated": 527838,
-    "total_reads": 316,
-    "total_writes": 192,
-    "total_sessions": 16,
-    "anatomy_hits": 97,
-    "anatomy_misses": 214,
-    "repeated_reads_blocked": 80,
-    "estimated_savings_vs_bare_cli": 566593
+    "total_tokens_estimated": 797507,
+    "total_reads": 348,
+    "total_writes": 261,
+    "total_sessions": 24,
+    "anatomy_hits": 117,
+    "anatomy_misses": 226,
+    "repeated_reads_blocked": 149,
+    "estimated_savings_vs_bare_cli": 1182353
   },
   "sessions": [
     {
@@ -3319,6 +3319,696 @@
         "writes_count": 20,
         "repeated_reads_blocked": 17,
         "anatomy_lookups": 0
+      }
+    },
+    {
+      "id": "session-2026-07-20-1245",
+      "started": "2026-07-20T09:45:41.419Z",
+      "ended": "2026-07-20T09:48:37.730Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 19423,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 0,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 235,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 422,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 378,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 19423,
+        "output_tokens_estimated": 1035,
+        "reads_count": 2,
+        "writes_count": 3,
+        "repeated_reads_blocked": 5,
+        "anatomy_lookups": 1
+      }
+    },
+    {
+      "id": "session-2026-07-20-1245",
+      "started": "2026-07-20T09:45:41.419Z",
+      "ended": "2026-07-20T09:50:37.935Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 19423,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 17863,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 2902,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/ChipClient.kt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 6569,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 235,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 422,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 378,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 261,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 131,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 577,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 277,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 120,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 46757,
+        "output_tokens_estimated": 2401,
+        "reads_count": 5,
+        "writes_count": 8,
+        "repeated_reads_blocked": 9,
+        "anatomy_lookups": 3
+      }
+    },
+    {
+      "id": "session-2026-07-20-1245",
+      "started": "2026-07-20T09:45:41.419Z",
+      "ended": "2026-07-20T09:51:22.488Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 19423,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 17863,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 2902,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/ChipClient.kt",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 6569,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/home_page.dart",
+          "tokens_estimated": 655,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 235,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 422,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/Classes/DeviceControlHandle.m",
+          "tokens_estimated": 378,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 261,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/android/src/main/kotlin/com/tyx/flutter_matter/DeviceControl.kt",
+          "tokens_estimated": 131,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 577,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/data.dart",
+          "tokens_estimated": 277,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 120,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/home_page.dart",
+          "tokens_estimated": 307,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 47412,
+        "output_tokens_estimated": 2708,
+        "reads_count": 6,
+        "writes_count": 9,
+        "repeated_reads_blocked": 9,
+        "anatomy_lookups": 4
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T10:30:27.093Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2199,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 9890,
+        "output_tokens_estimated": 7556,
+        "reads_count": 3,
+        "writes_count": 6,
+        "repeated_reads_blocked": 6,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T10:32:13.811Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2641,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 10332,
+        "output_tokens_estimated": 7556,
+        "reads_count": 3,
+        "writes_count": 6,
+        "repeated_reads_blocked": 7,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T10:50:37.747Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5005,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5720,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 621,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 602,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12696,
+        "output_tokens_estimated": 14499,
+        "reads_count": 3,
+        "writes_count": 9,
+        "repeated_reads_blocked": 8,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T10:53:12.066Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5005,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5720,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 621,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 602,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12696,
+        "output_tokens_estimated": 14499,
+        "reads_count": 3,
+        "writes_count": 9,
+        "repeated_reads_blocked": 8,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T10:57:15.919Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5005,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5720,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 621,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 602,
+          "action": "edit"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 12696,
+        "output_tokens_estimated": 14499,
+        "reads_count": 3,
+        "writes_count": 9,
+        "repeated_reads_blocked": 8,
+        "anatomy_lookups": 2
+      }
+    },
+    {
+      "id": "session-2026-07-21-1232",
+      "started": "2026-07-21T09:32:04.667Z",
+      "ended": "2026-07-21T11:08:10.033Z",
+      "reads": [
+        {
+          "file": "d:/Waleed/flutter projects/matter/lib/src/clusters/descriptor_cluster.dart",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 7691,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5432,
+          "was_repeated": true,
+          "anatomy_had_description": false
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/ios/frameworks/ZGMatter.framework/Headers/ZGMTRClusterConstants.h",
+          "tokens_estimated": 0,
+          "was_repeated": false,
+          "anatomy_had_description": false
+        }
+      ],
+      "writes": [
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 196,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 979,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 760,
+          "action": "edit"
+        },
+        {
+          "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+          "tokens_estimated": 90,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 2513,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 3018,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5720,
+          "action": "create"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 621,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 602,
+          "action": "edit"
+        },
+        {
+          "file": "C:/Users/dedoa/.claude/plans/what-other-features-we-fancy-mango.md",
+          "tokens_estimated": 5392,
+          "action": "create"
+        }
+      ],
+      "totals": {
+        "input_tokens_estimated": 13123,
+        "output_tokens_estimated": 19891,
+        "reads_count": 4,
+        "writes_count": 10,
+        "repeated_reads_blocked": 9,
+        "anatomy_lookups": 2
       }
     }
   ],

@@ -55,17 +55,26 @@ class _HomePageState extends State<HomePage> {
       body: ListView.builder(
         itemBuilder: (context, index) {
           final device = devices[index];
+          final title = device.productName != null
+              ? '${device.productName} (${device.nodeId})'
+              : 'Device ${device.nodeId}';
           final subtitleParts = <String>[
             'NodeId: ${device.nodeId}',
-            if (device.vendorId != null)
+            if (device.vendorName != null)
+              device.vendorName!
+            else if (device.vendorId != null)
               'VID: 0x${device.vendorId!.toRadixString(16)}',
             if (device.productId != null)
               'PID: 0x${device.productId!.toRadixString(16)}',
+            if (device.softwareVersion != null)
+              'SW: ${device.softwareVersion}',
             if (device.pairedAt != null)
               'Paired: ${device.pairedAt!.toLocal().toString().split('.').first}',
+            if (device.lastSeenAt != null)
+              'Last seen: ${device.lastSeenAt!.toLocal().toString().split('.').first}',
           ];
           return ListTile(
-            title: Text("Device ${device.nodeId}"),
+            title: Text(title),
             subtitle: Text(subtitleParts.join(' • ')),
             isThreeLine: true,
             onTap: () {

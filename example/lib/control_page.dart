@@ -637,6 +637,12 @@ class _DeviceInfoTabPageState extends State<DeviceInfoTabPage> {
             _basicInfo = decoded;
             _loadingInfo = false;
           });
+          updateDeviceInfo(
+            widget.controlDevice.nodeId,
+            vendorName: decoded[1],
+            productName: decoded[3],
+            softwareVersion: decoded[10] ?? decoded[9],
+          );
         },
         onErrorFun: (_, __, ___) {
           if (!mounted) {
