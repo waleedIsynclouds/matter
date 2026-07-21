@@ -26,3 +26,5 @@ export 'src/model/icd_device_info.dart';
 export 'src/nsd.dart';
 export 'src/clusters/descriptor_cluster.dart';
 export 'src/clusters/basic_information_cluster.dart';
+export 'src/data_model/cluster_catalog.dart';
+export 'src/data_model/dynamic_cluster_reader.dart';

@@ -428,6 +428,22 @@
       "related_bugs": [],
       "occurrences": 1,
       "last_seen": "2026-07-20T09:51:02.311Z"
+    },
+    {
+      "id": "bug-027",
+      "timestamp": "2026-07-21T12:55:05.803Z",
+      "error_message": "Incorrect value in code",
+      "file": "tool/generate_cluster_catalog_doc.dart",
+      "root_cause": "Had 'package:flutter_matter/flutter_matter.dart'",
+      "fix": "Changed to 'dart:io'",
+      "tags": [
+        "auto-detected",
+        "wrong-value",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-21T12:55:31.339Z"
     }
   ]
 }

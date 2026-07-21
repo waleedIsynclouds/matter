@@ -1,10 +1,11 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-21T11:07:58.718Z
-> Files: 13 tracked | Anatomy hits: 0 | Misses: 0
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-21T12:56:18.493Z
+> Files: 16 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
 
+- `README.md` — Project documentation (~2187 tok)
 
 ## .claude/
 
@@ -165,3 +166,8 @@
 
 ## lib/src/tlv/
 
+
+## tool/
+
+- `_print_catalog_counts.dart` (~98 tok)
+- `generate_cluster_catalog_doc.dart` — Generates docs/CLUSTER_CATALOG.md — a full, human-readable dump of every (~1226 tok)

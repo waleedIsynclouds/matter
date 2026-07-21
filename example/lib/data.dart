@@ -1,4 +1,3 @@
-
 import 'dart:async';
 import 'dart:convert';
 import 'dart:typed_data';
@@ -17,7 +16,7 @@ const key_devices = 'devices';
 
 List<int> bigIntToBytes(BigInt bigInt) {
   String hexString = bigInt.toRadixString(16);
-  
+
   if (hexString.length % 2 != 0) {
     hexString = '0$hexString';
   }
@@ -25,13 +24,16 @@ List<int> bigIntToBytes(BigInt bigInt) {
   return HEX.decode(hexString);
 }
 
-
 class MyKeypairDelegate implements KeypairDelegate {
   final ECPublicKey publicKey;
   final ECPrivateKey privateKey;
   final Uint8List? pubKey;
 
-  MyKeypairDelegate({required this.publicKey, required this.privateKey, this.pubKey});
+  MyKeypairDelegate({
+    required this.publicKey,
+    required this.privateKey,
+    this.pubKey,
+  });
 
   @override
   Uint8List createCertificateSigningRequest() {
@@ -51,14 +53,17 @@ class MyKeypairDelegate implements KeypairDelegate {
     }
     secureRandom.seed(KeyParameter(seed));
     var signer = ECDSASigner(SHA256Digest());
-    signer.init(true, ParametersWithRandom(PrivateKeyParameter(privateKey), secureRandom));  // true表示签名
+    signer.init(
+      true,
+      ParametersWithRandom(PrivateKeyParameter(privateKey), secureRandom),
+    ); // true表示签名
 
     // 对消息进行签名
-    var signature = signer.generateSignature(Uint8List.fromList(message)) as ECSignature;
-    final encoded = ASN1Sequence(elements: [
-      ASN1Integer(signature.r),
-      ASN1Integer(signature.s),
-    ]).encode();
+    var signature =
+        signer.generateSignature(Uint8List.fromList(message)) as ECSignature;
+    final encoded = ASN1Sequence(
+      elements: [ASN1Integer(signature.r), ASN1Integer(signature.s)],
+    ).encode();
     print('ecdsaSignMessage ${message}');
     return encoded;
   }
@@ -87,44 +92,62 @@ class MyKeypairDelegate implements KeypairDelegate {
 
     // 将 X 和 Y 坐标转换为 Uint8List
     final xUint8List = Uint8List.fromList(
-        List<int>.generate(32, (i) => int.parse(xBytes.substring(i * 2, i * 2 + 2), radix: 16)));
+      List<int>.generate(
+        32,
+        (i) => int.parse(xBytes.substring(i * 2, i * 2 + 2), radix: 16),
+      ),
+    );
     final yUint8List = Uint8List.fromList(
-        List<int>.generate(32, (i) => int.parse(yBytes.substring(i * 2, i * 2 + 2), radix: 16)));
+      List<int>.generate(
+        32,
+        (i) => int.parse(yBytes.substring(i * 2, i * 2 + 2), radix: 16),
+      ),
+    );
 
     // 构造无压缩格式的公钥：0x04 + X 坐标 + Y 坐标
-    final uncompressedPublicKey = Uint8List(1 + xUint8List.length + yUint8List.length);
+    final uncompressedPublicKey = Uint8List(
+      1 + xUint8List.length + yUint8List.length,
+    );
     uncompressedPublicKey[0] = 0x04;
     uncompressedPublicKey.setRange(1, 33, xUint8List);
     uncompressedPublicKey.setRange(33, 65, yUint8List);
 
-
     return uncompressedPublicKey;
   }
-  
 }
 
-Future<AsymmetricKeyPair<ECPublicKey, ECPrivateKey>> genAsymmetricKeyPair() async {
+Future<AsymmetricKeyPair<ECPublicKey, ECPrivateKey>>
+genAsymmetricKeyPair() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   final keypairJson = sp.getString(key_keypair);
   if (keypairJson == null) {
     final key = generateP256KeyPair();
-    final encodeData = PemCodec(PemLabel.publicKey).encode(Uint8List.fromList((key.publicKey as ECPublicKey).Q!.getEncoded()));
-    final encodePriData = PemCodec(PemLabel.privateKey).encode(bigIntToBytes((key.privateKey as ECPrivateKey).d!));
-    sp.setString(key_keypair, jsonEncode({
-      "publicKey": encodeData,
-      "privateKey": encodePriData,
-    }));
-    return AsymmetricKeyPair(key.publicKey as ECPublicKey, key.privateKey as ECPrivateKey);
+    final encodeData = PemCodec(PemLabel.publicKey).encode(
+      Uint8List.fromList((key.publicKey as ECPublicKey).Q!.getEncoded()),
+    );
+    final encodePriData = PemCodec(
+      PemLabel.privateKey,
+    ).encode(bigIntToBytes((key.privateKey as ECPrivateKey).d!));
+    sp.setString(
+      key_keypair,
+      jsonEncode({"publicKey": encodeData, "privateKey": encodePriData}),
+    );
+    return AsymmetricKeyPair(
+      key.publicKey as ECPublicKey,
+      key.privateKey as ECPrivateKey,
+    );
   } else {
     final data = jsonDecode(keypairJson);
-    
+
     /// this is ai generate code 😝
     var ecDomainParams = ECCurve_secp256r1(); // 使用 secp256r1 曲线
-    var q = ecDomainParams.curve.decodePoint(PemCodec(PemLabel.publicKey).decode(data['publicKey'])); // 从字节数组恢复公钥点
+    var q = ecDomainParams.curve.decodePoint(
+      PemCodec(PemLabel.publicKey).decode(data['publicKey']),
+    ); // 从字节数组恢复公钥点
 
     final publicKey = ECPublicKey(q, ecDomainParams);
     var pem = PemCodec(PemLabel.privateKey).decode(data['privateKey']);
-    
+
     // 提取私钥的字节数据
     var privateKeyBytes = pem;
 
@@ -159,27 +182,43 @@ AsymmetricKeyPair<PublicKey, PrivateKey> generateP256KeyPair() {
   return keyGen.generateKeyPair();
 }
 
-
 /// return the app rcac and phone noc
 Future<List<Uint8List>> getX509Certificate() async {
   SharedPreferences sp = await SharedPreferences.getInstance();
   final certificates = sp.getString(key_certificate);
   if (certificates != null) {
     final matterInfoData = jsonDecode(certificates);
-    final rootCertificate = Uint8List.fromList(matterInfoData['rcac'].cast<int>());
-    final operationalCertificate = Uint8List.fromList(matterInfoData['nodeOC'].cast<int>());
-    print('rootCertificate: ${base64.encode(rootCertificate)} \n operationalCertificate: ${base64.encode(operationalCertificate)}');
+    final rootCertificate = Uint8List.fromList(
+      matterInfoData['rcac'].cast<int>(),
+    );
+    final operationalCertificate = Uint8List.fromList(
+      matterInfoData['nodeOC'].cast<int>(),
+    );
+    print(
+      'rootCertificate: ${base64.encode(rootCertificate)} \n operationalCertificate: ${base64.encode(operationalCertificate)}',
+    );
     return [rootCertificate, operationalCertificate];
   }
   final asymmetricKeyPair = await genAsymmetricKeyPair();
-  final kp = MyKeypairDelegate(publicKey: asymmetricKeyPair.publicKey, privateKey: asymmetricKeyPair.privateKey);
-  final rcac = await ChipDeviceController.createRootCertificate(kp, 0, await getFabricId());
-  final nodeOC = await ChipDeviceController.createOperationalCertificate(kp, rcac, kp.getPublicKey(), await getFabricId(), kTestControllerNodeId, null);
+  final kp = MyKeypairDelegate(
+    publicKey: asymmetricKeyPair.publicKey,
+    privateKey: asymmetricKeyPair.privateKey,
+  );
+  final rcac = await ChipDeviceController.createRootCertificate(
+    kp,
+    0,
+    await getFabricId(),
+  );
+  final nodeOC = await ChipDeviceController.createOperationalCertificate(
+    kp,
+    rcac,
+    kp.getPublicKey(),
+    await getFabricId(),
+    kTestControllerNodeId,
+    null,
+  );
   // c.deleteDeviceController();
-  sp.setString(key_certificate, jsonEncode({
-    'rcac': rcac,
-    'nodeOC': nodeOC
-  }));
+  sp.setString(key_certificate, jsonEncode({'rcac': rcac, 'nodeOC': nodeOC}));
   return [rcac, nodeOC];
 }
 
@@ -195,6 +234,8 @@ class Device {
   final String? productName;
   final String? softwareVersion;
   final DateTime? lastSeenAt;
+  final List<int>? supportedClusters;
+  final Map<String, String> lastKnownState;
 
   Device(
     this.nodeId, {
@@ -206,6 +247,8 @@ class Device {
     this.productName,
     this.softwareVersion,
     this.lastSeenAt,
+    this.supportedClusters,
+    this.lastKnownState = const {},
   });
 
   Device copyWith({
@@ -213,6 +256,8 @@ class Device {
     String? productName,
     String? softwareVersion,
     DateTime? lastSeenAt,
+    List<int>? supportedClusters,
+    Map<String, String>? lastKnownState,
   }) {
     return Device(
       nodeId,
@@ -224,10 +269,12 @@ class Device {
       productName: productName ?? this.productName,
       softwareVersion: softwareVersion ?? this.softwareVersion,
       lastSeenAt: lastSeenAt ?? this.lastSeenAt,
+      supportedClusters: supportedClusters ?? this.supportedClusters,
+      lastKnownState: lastKnownState ?? this.lastKnownState,
     );
   }
 
-  toJson() {
+  Map<String, dynamic> toJson() {
     return {
       'nodeId': nodeId,
       'vendorId': vendorId,
@@ -238,20 +285,34 @@ class Device {
       'productName': productName,
       'softwareVersion': softwareVersion,
       'lastSeenAt': lastSeenAt?.toIso8601String(),
+      'supportedClusters': supportedClusters,
+      'lastKnownState': lastKnownState,
     };
   }
 
   factory Device.fromJson(Map<String, dynamic> json) {
+    final supportedClusters = json['supportedClusters'];
+    final lastKnownState = json['lastKnownState'];
     return Device(
       json['nodeId'],
       vendorId: json['vendorId'],
       productId: json['productId'],
       discriminator: json['discriminator'],
-      pairedAt: json['pairedAt'] == null ? null : DateTime.tryParse(json['pairedAt']),
+      pairedAt: json['pairedAt'] == null
+          ? null
+          : DateTime.tryParse(json['pairedAt']),
       vendorName: json['vendorName'],
       productName: json['productName'],
       softwareVersion: json['softwareVersion'],
-      lastSeenAt: json['lastSeenAt'] == null ? null : DateTime.tryParse(json['lastSeenAt']),
+      lastSeenAt: json['lastSeenAt'] == null
+          ? null
+          : DateTime.tryParse(json['lastSeenAt']),
+      supportedClusters: supportedClusters == null
+          ? null
+          : List<int>.from(supportedClusters.cast<int>()),
+      lastKnownState: lastKnownState == null
+          ? const {}
+          : Map<String, String>.from(lastKnownState.cast<String, dynamic>()),
     );
   }
 }
@@ -271,7 +332,6 @@ Future<int> getFabricId() async {
   return 709394;
 }
 
-
 Future<ChipDeviceController> createChipDeviceController() async {
   final keypair = await genAsymmetricKeyPair();
   final kp = keypair;
@@ -280,13 +340,16 @@ Future<ChipDeviceController> createChipDeviceController() async {
   final cp = ControllerParams(
     skipCommissioningComplete: false,
     fabricId: fabricId,
-    keypairDelegate: MyKeypairDelegate(publicKey: kp.publicKey, privateKey: kp.privateKey),
+    keypairDelegate: MyKeypairDelegate(
+      publicKey: kp.publicKey,
+      privateKey: kp.privateKey,
+    ),
     ipk: defaultIpk,
     rootCertificate: cert[0],
     intermediateCertificate: cert[0],
-    operationalCertificate: cert[1]
+    operationalCertificate: cert[1],
   );
-  
+
   return await ChipDeviceController.newControllerIfNotExist(cp);
 }
 
@@ -295,7 +358,9 @@ StreamController deviceChangeNotifier = StreamController.broadcast();
 Future<void> saveDevice(Device device) async {
   final sp = await SharedPreferences.getInstance();
   final devices = sp.getString(key_devices);
-  final devicesList = devices == null ? [] : jsonDecode(devices).cast<Map<String, dynamic>>();
+  final devicesList = devices == null
+      ? []
+      : jsonDecode(devices).cast<Map<String, dynamic>>();
   devicesList.add(device.toJson());
   await sp.setInt(key_max_nodeId, device.nodeId);
   await sp.setString(key_devices, jsonEncode(devicesList)).then((value) {
@@ -312,7 +377,9 @@ Future<void> updateDeviceInfo(
 }) async {
   final sp = await SharedPreferences.getInstance();
   final devices = sp.getString(key_devices);
-  final devicesList = devices == null ? [] : jsonDecode(devices).cast<Map<String, dynamic>>();
+  final devicesList = devices == null
+      ? []
+      : jsonDecode(devices).cast<Map<String, dynamic>>();
   var changed = false;
   final updatedList = devicesList.map((json) {
     if (json['nodeId'] != nodeId) {
@@ -320,11 +387,11 @@ Future<void> updateDeviceInfo(
     }
     changed = true;
     final updated = Device.fromJson(json.cast<String, dynamic>()).copyWith(
-          vendorName: vendorName,
-          productName: productName,
-          softwareVersion: softwareVersion,
-          lastSeenAt: DateTime.now(),
-        );
+      vendorName: vendorName,
+      productName: productName,
+      softwareVersion: softwareVersion,
+      lastSeenAt: DateTime.now(),
+    );
     return updated.toJson();
   }).toList();
   if (!changed) {
@@ -339,16 +406,81 @@ Future<void> updateDeviceInfo(
 Future<List<Device>> getDevices() async {
   final sp = await SharedPreferences.getInstance();
   final devices = sp.getString(key_devices);
-  final devicesList = devices == null ? [] : jsonDecode(devices).cast<Map<String, dynamic>>();
-  return devicesList.map((e) => Device.fromJson(e.cast<String, dynamic>())).toList().cast<Device>();
+  final devicesList = devices == null
+      ? []
+      : jsonDecode(devices).cast<Map<String, dynamic>>();
+  return devicesList
+      .map((e) => Device.fromJson(e.cast<String, dynamic>()))
+      .toList()
+      .cast<Device>();
 }
 
 Future<bool> deleteDevice(Device device) async {
   final sp = await SharedPreferences.getInstance();
   final devices = sp.getString(key_devices);
-  final devicesList = devices == null ? [] : jsonDecode(devices).cast<Map<String, dynamic>>();
-  final newDevicesList = devicesList.where((element) => element['nodeId'] != device.nodeId).toList();
-  return await sp.setString(key_devices, jsonEncode(newDevicesList)).then((value) {
+  final devicesList = devices == null
+      ? []
+      : jsonDecode(devices).cast<Map<String, dynamic>>();
+  final newDevicesList = devicesList
+      .where((element) => element['nodeId'] != device.nodeId)
+      .toList();
+  return await sp.setString(key_devices, jsonEncode(newDevicesList)).then((
+    value,
+  ) {
+    deviceChangeNotifier.add(null);
+    return value;
+  });
+}
+
+Future<void> updateDeviceSupportedClusters(
+  int nodeId,
+  List<int> clusters,
+) async {
+  final sortedClusters = clusters.toSet().toList()..sort();
+  await _updateDevice(nodeId, (device) {
+    return device.copyWith(
+      supportedClusters: sortedClusters,
+      lastSeenAt: DateTime.now(),
+    );
+  });
+}
+
+Future<void> updateDeviceLastKnownState(
+  int nodeId,
+  Map<String, String> values,
+) async {
+  if (values.isEmpty) {
+    return;
+  }
+  await _updateDevice(nodeId, (device) {
+    return device.copyWith(
+      lastKnownState: {...device.lastKnownState, ...values},
+      lastSeenAt: DateTime.now(),
+    );
+  });
+}
+
+Future<void> _updateDevice(
+  int nodeId,
+  Device Function(Device device) update,
+) async {
+  final sp = await SharedPreferences.getInstance();
+  final devices = sp.getString(key_devices);
+  final devicesList = devices == null
+      ? []
+      : jsonDecode(devices).cast<Map<String, dynamic>>();
+  var changed = false;
+  final updatedList = devicesList.map((json) {
+    if (json['nodeId'] != nodeId) {
+      return json;
+    }
+    changed = true;
+    return update(Device.fromJson(json.cast<String, dynamic>())).toJson();
+  }).toList();
+  if (!changed) {
+    return;
+  }
+  await sp.setString(key_devices, jsonEncode(updatedList)).then((value) {
     deviceChangeNotifier.add(null);
     return value;
   });
