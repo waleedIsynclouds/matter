@@ -3,12 +3,12 @@
   "started": "2026-07-21T12:20:16.427Z",
   "files_read": {
     "d:/Waleed/flutter projects/matter/lib/src/data_model/cluster_catalog.dart": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-21T12:21:28.833Z"
     },
     "d:/Waleed/flutter projects/matter/lib/src/data_model/dynamic_cluster_reader.dart": {
-      "count": 1,
+      "count": 2,
       "tokens": 0,
       "first_read": "2026-07-21T12:21:38.836Z"
     },
@@ -31,6 +31,36 @@
       "count": 1,
       "tokens": 0,
       "first_read": "2026-07-21T12:55:51.690Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/data.dart": {
+      "count": 1,
+      "tokens": 3158,
+      "first_read": "2026-07-21T13:33:51.477Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/uitls.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-21T13:33:55.186Z"
+    },
+    "d:/Waleed/flutter projects/matter/lib/src/tlv/tlv_writer.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-21T13:34:03.808Z"
+    },
+    "d:/Waleed/flutter projects/matter/lib/flutter_matter.dart": {
+      "count": 1,
+      "tokens": 0,
+      "first_read": "2026-07-21T13:35:06.274Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/control_page.dart": {
+      "count": 19,
+      "tokens": 18179,
+      "first_read": "2026-07-21T13:35:19.191Z"
+    },
+    "d:/Waleed/flutter projects/matter/example/lib/home_page.dart": {
+      "count": 1,
+      "tokens": 775,
+      "first_read": "2026-07-21T13:43:38.036Z"
     }
   },
   "files_written": [
@@ -69,16 +99,137 @@
       "action": "edit",
       "tokens": 116,
       "at": "2026-07-21T12:56:18.504Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 318,
+      "at": "2026-07-21T13:35:14.753Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 306,
+      "at": "2026-07-21T13:35:33.078Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 1883,
+      "at": "2026-07-21T13:36:01.439Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 3492,
+      "at": "2026-07-21T13:36:40.624Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 4,
+      "at": "2026-07-21T13:37:08.389Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 119,
+      "at": "2026-07-21T13:37:24.807Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 477,
+      "at": "2026-07-21T13:37:35.803Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 174,
+      "at": "2026-07-21T13:37:44.866Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 148,
+      "at": "2026-07-21T13:43:51.043Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 263,
+      "at": "2026-07-21T13:44:03.306Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 15,
+      "at": "2026-07-21T13:44:07.909Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 70,
+      "at": "2026-07-21T13:44:14.435Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 2012,
+      "at": "2026-07-21T13:45:24.891Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 145,
+      "at": "2026-07-21T13:45:34.850Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 80,
+      "at": "2026-07-21T13:45:49.249Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 4,
+      "at": "2026-07-21T13:46:03.269Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 10,
+      "at": "2026-07-21T13:46:09.120Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 124,
+      "at": "2026-07-21T13:46:20.573Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 307,
+      "at": "2026-07-21T13:46:29.039Z"
+    },
+    {
+      "file": "d:/Waleed/flutter projects/matter/example/lib/control_page.dart",
+      "action": "edit",
+      "tokens": 66,
+      "at": "2026-07-21T13:46:35.061Z"
     }
   ],
   "edit_counts": {
     "tool/_print_catalog_counts.dart": 1,
     "README.md": 2,
-    "tool/generate_cluster_catalog_doc.dart": 3
+    "tool/generate_cluster_catalog_doc.dart": 3,
+    "example/lib/control_page.dart": 20
   },
-  "anatomy_hits": 0,
-  "anatomy_misses": 6,
-  "repeated_reads_warned": 4,
+  "anatomy_hits": 3,
+  "anatomy_misses": 9,
+  "repeated_reads_warned": 24,
   "cerebrum_warnings": 0,
-  "stop_count": 3
+  "stop_count": 5
 }

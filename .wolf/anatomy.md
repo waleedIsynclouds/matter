@@ -1,6 +1,6 @@
 # anatomy.md
 
-> Auto-maintained by OpenWolf. Last scanned: 2026-07-21T12:56:18.493Z
+> Auto-maintained by OpenWolf. Last scanned: 2026-07-21T13:46:35.050Z
 > Files: 16 tracked | Anatomy hits: 0 | Misses: 0
 
 ## ./
@@ -120,7 +120,7 @@
 
 - `commissioning_controller.dart` — Class: CommissioningSubStep (~4853 tok)
 - `commissioning_page.dart` — Stateful widget: CommissioningPage (~6102 tok)
-- `control_page.dart` — Stateful widget: ControlPage (~7691 tok)
+- `control_page.dart` — Stateful widget: ControlPage (~17530 tok)
 - `data.dart` — Class: MyKeypairDelegate (~3158 tok)
 - `home_page.dart` — Stateful widget: HomePage (~775 tok)
 

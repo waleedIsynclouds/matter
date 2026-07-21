@@ -48,14 +48,13 @@ class OpenCommissioningCallbackWarp extends OpenCommissioningCallback {
   }
 }
 
-enum _ControlTabKind { info, cluster, sharing, readWrite, ocw }
+enum _ControlTabKind { info, ocw, device, advanced }
 
 class _ControlTab {
   final _ControlTabKind kind;
-  final int? clusterId;
   final String label;
 
-  const _ControlTab(this.kind, this.label, {this.clusterId});
+  const _ControlTab(this.kind, this.label);
 }
 
 class ControlPage extends StatefulWidget {
@@ -68,34 +67,45 @@ class ControlPage extends StatefulWidget {
 
 class _ControlPageState extends State<ControlPage>
     with SingleTickerProviderStateMixin {
+  final GlobalKey<ScaffoldState> _scaffoldKey = GlobalKey<ScaffoldState>();
   late TabController tabController;
   Object? connectContext;
   bool connectting = false;
   ChipDeviceController? chipDeviceController;
   late List<int> supportedClusters;
-  late List<_ControlTab> tabs;
+  final List<_ControlTab> tabs = const [
+    _ControlTab(_ControlTabKind.info, 'Info'),
+    _ControlTab(_ControlTabKind.ocw, 'OCW'),
+    _ControlTab(_ControlTabKind.device, 'Device'),
+    _ControlTab(_ControlTabKind.advanced, 'Advanced'),
+  ];
 
   @override
   void initState() {
     super.initState();
     supportedClusters = widget.device.supportedClusters ?? const [];
-    tabs = _buildTabs();
     tabController = TabController(length: tabs.length, vsync: this);
-    createChipDeviceController()
-        .then((value) {
-          if (!mounted) {
-            return;
-          }
-          setState(() {
-            chipDeviceController = value;
-          });
-        })
-        .catchError((e) {
-          if (!mounted) {
-            return;
-          }
-          showToast('Failed to create Matter controller');
-        });
+    _initController();
+  }
+
+  Future<void> _initController() async {
+    try {
+      final controller = await createChipDeviceController();
+      if (!mounted) {
+        return;
+      }
+      setState(() {
+        chipDeviceController = controller;
+      });
+      // Connect immediately so the user lands on a fully populated page
+      // instead of having to press Connect manually.
+      _changeConnectState();
+    } catch (_) {
+      if (!mounted) {
+        return;
+      }
+      showToast('Failed to create Matter controller');
+    }
   }
 
   @override
@@ -104,46 +114,14 @@ class _ControlPageState extends State<ControlPage>
     super.dispose();
   }
 
-  List<_ControlTab> _buildTabs() {
-    final clusterTabs = supportedClusters
-        .where((id) => id != 0x0000001D)
-        .map(
-          (id) => _ControlTab(
-            _ControlTabKind.cluster,
-            matterClusterName(id),
-            clusterId: id,
-          ),
-        )
-        .toList();
-    return [
-      const _ControlTab(_ControlTabKind.info, 'Info'),
-      ...clusterTabs,
-      const _ControlTab(_ControlTabKind.sharing, 'Sharing'),
-      const _ControlTab(_ControlTabKind.readWrite, 'Read/Write'),
-      const _ControlTab(_ControlTabKind.ocw, 'OCW'),
-    ];
-  }
-
-  void _rebuildTabsIfNeeded(List<int> clusters) {
+  void _updateSupportedClusters(List<int> clusters) {
     final next = clusters.toSet().toList()..sort();
     if (_sameIntList(next, supportedClusters)) {
       return;
     }
-    final oldIndex = tabController.index;
-    final oldLength = tabs.length;
     setState(() {
       supportedClusters = next;
-      tabs = _buildTabs();
-      tabController.dispose();
-      tabController = TabController(
-        length: tabs.length,
-        vsync: this,
-        initialIndex: oldIndex.clamp(0, tabs.length - 1),
-      );
     });
-    if (oldLength != tabs.length) {
-      updateDeviceSupportedClusters(widget.device.nodeId, next);
-    }
   }
 
   bool _sameIntList(List<int> a, List<int> b) {
@@ -171,7 +149,7 @@ class _ControlPageState extends State<ControlPage>
         endpointId: 1,
         nodeId: widget.device.nodeId,
       ).readServerListAttribute();
-      _rebuildTabsIfNeeded(clusters);
+      _updateSupportedClusters(clusters);
       await updateDeviceSupportedClusters(widget.device.nodeId, clusters);
     } catch (e) {
       showToast('Failed to discover clusters');
@@ -182,19 +160,28 @@ class _ControlPageState extends State<ControlPage>
     if (chipDeviceController == null || connectting) {
       return;
     }
-    connectting = true;
+    setState(() {
+      connectting = true;
+    });
     if (connectContext == null) {
       chipDeviceController!.connectedDevice(
         widget.device.nodeId,
         _ConnectedDeviceCallbackWarp(
           onConnectionFailureFun: (_) {
-            connectting = false;
+            if (!mounted) {
+              return;
+            }
+            setState(() {
+              connectting = false;
+            });
+            showToast('Failed to connect to device');
           },
           onConnectedFun: (context) {
             setState(() {
               connectting = false;
               connectContext = context;
             });
+            showToast('Connected');
             _discoverClusters();
           },
         ),
@@ -282,31 +269,159 @@ class _ControlPageState extends State<ControlPage>
     );
   }
 
+  void _confirmUnpairDevice() {
+    Navigator.pop(context); // close the drawer first
+    showDialog<void>(
+      context: context,
+      builder: (dialogContext) => AlertDialog(
+        title: const Text('Remove device'),
+        content: const Text(
+          'This will unpair the device from this controller. Continue?',
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(dialogContext),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              Navigator.pop(dialogContext);
+              _unPairDevice();
+            },
+            child: const Text('Remove', style: TextStyle(color: Colors.red)),
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget _buildDrawer() {
+    final isConnected = chipDeviceController != null && connectContext != null;
+    return Drawer(
+      child: SafeArea(
+        child: ListView(
+          padding: EdgeInsets.zero,
+          children: [
+            DrawerHeader(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    widget.device.productName ??
+                        widget.device.vendorName ??
+                        'Device',
+                    style: Theme.of(context).textTheme.titleMedium,
+                  ),
+                  const SizedBox(height: 4),
+                  Text('Node ID: ${widget.device.nodeId}'),
+                  const SizedBox(height: 4),
+                  Text(isConnected ? 'Connected' : 'Not connected'),
+                ],
+              ),
+            ),
+            ListTile(
+              leading: Icon(
+                connectContext == null ? Icons.link : Icons.link_off,
+              ),
+              title: Text(connectContext == null ? 'Connect' : 'Disconnect'),
+              onTap: () {
+                Navigator.pop(context);
+                _changeConnectState();
+              },
+            ),
+            ListTile(
+              enabled: isConnected,
+              leading: const Icon(Icons.qr_code),
+              title: const Text('Share this device'),
+              subtitle: const Text('Invite another controller'),
+              onTap: !isConnected
+                  ? null
+                  : () {
+                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => Scaffold(
+                            appBar: AppBar(title: const Text('Sharing')),
+                            body: SharingTabPage(
+                              chipDeviceController: chipDeviceController!,
+                              controlDevice: widget.device,
+                              controlContext: connectContext,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+            ),
+            ListTile(
+              enabled: isConnected,
+              leading: const Icon(Icons.edit_note),
+              title: const Text('Manual read/write'),
+              subtitle: const Text('Send a custom read, write, or command'),
+              onTap: !isConnected
+                  ? null
+                  : () {
+                      Navigator.pop(context);
+                      Navigator.of(context).push(
+                        MaterialPageRoute(
+                          builder: (_) => Scaffold(
+                            appBar: AppBar(
+                              title: const Text('Manual read/write'),
+                            ),
+                            body: Read_WritePage(
+                              chipDeviceController: chipDeviceController!,
+                              controlDevice: widget.device,
+                              controlContext: connectContext,
+                            ),
+                          ),
+                        ),
+                      );
+                    },
+            ),
+            const Divider(),
+            ListTile(
+              leading: const Icon(Icons.delete, color: Colors.red),
+              title: const Text(
+                'Remove device',
+                style: TextStyle(color: Colors.red),
+              ),
+              onTap: _confirmUnpairDevice,
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      key: _scaffoldKey,
+      endDrawer: _buildDrawer(),
       appBar: AppBar(
-        title: const Text('Control'),
+        title: Text(
+          widget.device.productName ?? widget.device.vendorName ?? 'Control',
+        ),
         actions: [
           TextButton(
-            onPressed: () {
-              _changeConnectState();
-            },
-            child: Text(connectContext == null ? "Connect" : "disConnect"),
+            onPressed: connectting ? null : _changeConnectState,
+            child: connectting
+                ? const SizedBox(
+                    width: 16,
+                    height: 16,
+                    child: CircularProgressIndicator(strokeWidth: 2),
+                  )
+                : Text(connectContext == null ? "Connect" : "Disconnect"),
+          ),
+          IconButton(
+            icon: const Icon(Icons.more_vert),
+            onPressed: () => _scaffoldKey.currentState?.openEndDrawer(),
           ),
         ],
         bottom: TabBar(
           controller: tabController,
-          isScrollable: true,
           tabs: tabs.map((e) => Tab(text: e.label)).toList(),
         ),
-      ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          _unPairDevice();
-        },
-        backgroundColor: Colors.red,
-        child: Icon(Icons.delete),
       ),
       body: TabBarView(
         controller: tabController,
@@ -323,40 +438,30 @@ class _ControlPageState extends State<ControlPage>
                   controlContext: connectContext,
                 );
               }
-              if (tab.kind == _ControlTabKind.cluster) {
-                return ClusterDetailPage(
-                  chipDeviceController: chipDeviceController,
-                  controlDevice: widget.device,
-                  controlContext: connectContext,
-                  endpointId: 1,
-                  clusterId: tab.clusterId!,
-                );
-              }
-              if (connectContext == null || chipDeviceController == null) {
-                return Center(child: Text("Device not connected"));
-              }
-              if (tab.kind == _ControlTabKind.sharing) {
-                return SharingTabPage(
-                  chipDeviceController: chipDeviceController!,
-                  controlDevice: widget.device,
-                  controlContext: connectContext,
-                );
-              }
               if (tab.kind == _ControlTabKind.ocw) {
+                if (connectContext == null || chipDeviceController == null) {
+                  return const Center(child: Text("Device not connected"));
+                }
                 return OCWTabPage(
                   chipDeviceController: chipDeviceController!,
                   controlDevice: widget.device,
                   controlContext: connectContext,
                 );
               }
-              if (tab.kind == _ControlTabKind.readWrite) {
-                return Read_WritePage(
-                  chipDeviceController: chipDeviceController!,
+              if (tab.kind == _ControlTabKind.advanced) {
+                return AdvancedDevicePage(
+                  chipDeviceController: chipDeviceController,
                   controlDevice: widget.device,
                   controlContext: connectContext,
+                  supportedClusters: supportedClusters,
                 );
               }
-              return const SizedBox.shrink();
+              return DeviceOverviewPage(
+                chipDeviceController: chipDeviceController,
+                controlDevice: widget.device,
+                controlContext: connectContext,
+                supportedClusters: supportedClusters,
+              );
             },
           );
         }).toList(),
@@ -385,6 +490,398 @@ class InvokeCallbackWarp implements InvokeCallback {
   @override
   void onResponse(InvokeElement invokeElement, int successCode) {
     onResponseCB?.call(invokeElement, successCode);
+  }
+}
+
+/// Device tab: quick controls, available commands the user can invoke, and
+/// a live status/events feed. Full cluster/attribute browsing lives in the
+/// Advanced tab instead.
+class DeviceOverviewPage extends StatelessWidget {
+  final ChipDeviceController? chipDeviceController;
+  final Device controlDevice;
+  final Object? controlContext;
+  final List<int> supportedClusters;
+
+  const DeviceOverviewPage({
+    super.key,
+    required this.chipDeviceController,
+    required this.controlDevice,
+    required this.controlContext,
+    required this.supportedClusters,
+  });
+
+  static const int _descriptorClusterId = 0x0000001D;
+  static const int _onOffClusterId = 0x00000006;
+
+  bool get _isConnected =>
+      chipDeviceController != null && controlContext != null;
+
+  bool get _clusterDiscoveryPending => supportedClusters.isEmpty;
+
+  bool get _supportsOnOff =>
+      _clusterDiscoveryPending || supportedClusters.contains(_onOffClusterId);
+
+  @override
+  Widget build(BuildContext context) {
+    if (!_isConnected) {
+      return ListView(
+        padding: const EdgeInsets.all(16),
+        children: const [
+          Text('Device', style: TextStyle(fontWeight: FontWeight.w600)),
+          SizedBox(height: 8),
+          Text('Connect to the device to view its commands and features.'),
+        ],
+      );
+    }
+
+    final clusters =
+        supportedClusters
+            .where((id) => id != _descriptorClusterId)
+            .toSet()
+            .toList()
+          ..sort();
+
+    final commandEntries = <_CommandEntry>[];
+    for (final clusterId in clusters) {
+      final info = clusterInfoForId(clusterId);
+      if (info == null) {
+        continue;
+      }
+      info.commands.forEach((commandId, command) {
+        commandEntries.add(
+          _CommandEntry(
+            clusterId: clusterId,
+            clusterName: info.name,
+            commandId: commandId,
+            command: command,
+          ),
+        );
+      });
+    }
+
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        Row(
+          children: [
+            Expanded(
+              child: Text(
+                'Device',
+                style: Theme.of(context).textTheme.titleMedium,
+              ),
+            ),
+            if (_clusterDiscoveryPending)
+              const Text(
+                'Detecting features',
+                style: TextStyle(color: Colors.grey),
+              ),
+          ],
+        ),
+        if (_supportsOnOff) ...[
+          const SizedBox(height: 12),
+          OnOffPage(
+            chipDeviceController: chipDeviceController!,
+            controlDevice: controlDevice,
+            controlContext: controlContext,
+          ),
+        ],
+        const SizedBox(height: 20),
+        Text('Commands', style: Theme.of(context).textTheme.titleSmall),
+        const SizedBox(height: 8),
+        if (commandEntries.isEmpty)
+          const Text('No commands are available for this device yet.'),
+        for (final entry in commandEntries)
+          _CommandCard(
+            chipDeviceController: chipDeviceController!,
+            controlDevice: controlDevice,
+            controlContext: controlContext,
+            endpointId: 1,
+            entry: entry,
+          ),
+        const Divider(height: 32),
+        LiveStatusPanel(
+          chipDeviceController: chipDeviceController!,
+          controlDevice: controlDevice,
+          controlContext: controlContext,
+        ),
+      ],
+    );
+  }
+}
+
+class _CommandEntry {
+  final int clusterId;
+  final String clusterName;
+  final int commandId;
+  final CommandInfo command;
+
+  const _CommandEntry({
+    required this.clusterId,
+    required this.clusterName,
+    required this.commandId,
+    required this.command,
+  });
+}
+
+/// A single available command shown as a card with a Send/Set-up button
+/// instead of raw cluster/command IDs.
+class _CommandCard extends StatefulWidget {
+  final ChipDeviceController chipDeviceController;
+  final Device controlDevice;
+  final Object? controlContext;
+  final int endpointId;
+  final _CommandEntry entry;
+
+  const _CommandCard({
+    required this.chipDeviceController,
+    required this.controlDevice,
+    required this.controlContext,
+    required this.endpointId,
+    required this.entry,
+  });
+
+  @override
+  State<_CommandCard> createState() => _CommandCardState();
+}
+
+class _CommandCardState extends State<_CommandCard> {
+  bool _sending = false;
+
+  void _send(Map<int, String>? fieldValues) {
+    final tlvWriter = TlvWriter();
+    tlvWriter.startStructure(AnonymousTag.instance);
+    if (fieldValues != null) {
+      for (final field in widget.entry.command.fields) {
+        final raw = fieldValues[field.tag];
+        if (raw == null || raw.isEmpty) {
+          continue;
+        }
+        final tag = ContextSpecificTag(field.tag);
+        switch (field.type) {
+          case MatterValueType.uint:
+            tlvWriter.putUnsigned(tag, num.tryParse(raw) ?? 0);
+            break;
+          case MatterValueType.int:
+            tlvWriter.put(tag, int.tryParse(raw) ?? 0);
+            break;
+          case MatterValueType.bool:
+            tlvWriter.putBool(tag, raw.toLowerCase() == 'true' || raw == '1');
+            break;
+          case MatterValueType.float:
+          case MatterValueType.doubleValue:
+            tlvWriter.putDouble(tag, double.tryParse(raw) ?? 0);
+            break;
+          case MatterValueType.string:
+            tlvWriter.putString(tag, raw);
+            break;
+          default:
+            break;
+        }
+      }
+    }
+    tlvWriter.endStructure();
+
+    setState(() {
+      _sending = true;
+    });
+    widget.chipDeviceController.invoke(
+      InvokeCallbackWarp(
+        onResponseCB: (_, __) {
+          if (mounted) {
+            setState(() => _sending = false);
+          }
+          showToast('${widget.entry.command.name} sent');
+        },
+        onErrorCB: (_) {
+          if (mounted) {
+            setState(() => _sending = false);
+          }
+          showToast('Failed to send ${widget.entry.command.name}');
+        },
+      ),
+      widget.controlDevice.nodeId,
+      InvokeElement.create(
+        widget.endpointId,
+        widget.entry.clusterId,
+        widget.entry.commandId,
+        tlvWriter.getEncoded(),
+        null,
+      ),
+      connectContext: widget.controlContext,
+      timedRequestTimeoutMs: 5000,
+    );
+  }
+
+  Future<void> _onSendPressed() async {
+    final fields = widget.entry.command.fields;
+    if (fields.isEmpty) {
+      _send(null);
+      return;
+    }
+    final values = await showModalBottomSheet<Map<int, String>>(
+      context: context,
+      isScrollControlled: true,
+      builder: (_) => _CommandFieldSheet(command: widget.entry.command),
+    );
+    if (values != null) {
+      _send(values);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final fieldCount = widget.entry.command.fields.length;
+    return Card(
+      margin: const EdgeInsets.only(bottom: 8),
+      child: ListTile(
+        title: Text(
+          widget.entry.command.name,
+          style: const TextStyle(fontWeight: FontWeight.w600),
+        ),
+        subtitle: Text(
+          fieldCount > 0
+              ? '${widget.entry.clusterName} • $fieldCount field${fieldCount == 1 ? '' : 's'}'
+              : widget.entry.clusterName,
+        ),
+        trailing: ElevatedButton.icon(
+          onPressed: _sending ? null : _onSendPressed,
+          icon: _sending
+              ? const SizedBox(
+                  width: 16,
+                  height: 16,
+                  child: CircularProgressIndicator(strokeWidth: 2),
+                )
+              : Icon(fieldCount > 0 ? Icons.tune : Icons.send),
+          label: Text(fieldCount > 0 ? 'Set up' : 'Send'),
+        ),
+      ),
+    );
+  }
+}
+
+/// Bottom sheet used to collect command field values before invoking a
+/// command that requires parameters.
+class _CommandFieldSheet extends StatefulWidget {
+  final CommandInfo command;
+
+  const _CommandFieldSheet({required this.command});
+
+  @override
+  State<_CommandFieldSheet> createState() => _CommandFieldSheetState();
+}
+
+class _CommandFieldSheetState extends State<_CommandFieldSheet> {
+  late final Map<int, TextEditingController> _controllers;
+
+  @override
+  void initState() {
+    super.initState();
+    _controllers = {
+      for (final field in widget.command.fields)
+        field.tag: TextEditingController(),
+    };
+  }
+
+  @override
+  void dispose() {
+    for (final controller in _controllers.values) {
+      controller.dispose();
+    }
+    super.dispose();
+  }
+
+  String _hintForType(MatterValueType type) {
+    switch (type) {
+      case MatterValueType.uint:
+      case MatterValueType.int:
+        return 'Number';
+      case MatterValueType.bool:
+        return 'true or false';
+      case MatterValueType.float:
+      case MatterValueType.doubleValue:
+        return 'Decimal number';
+      case MatterValueType.string:
+        return 'Text';
+      default:
+        return '';
+    }
+  }
+
+  TextInputType _keyboardTypeForType(MatterValueType type) {
+    switch (type) {
+      case MatterValueType.uint:
+        return TextInputType.number;
+      case MatterValueType.int:
+        return const TextInputType.numberWithOptions(signed: true);
+      case MatterValueType.float:
+      case MatterValueType.doubleValue:
+        return const TextInputType.numberWithOptions(
+          decimal: true,
+          signed: true,
+        );
+      default:
+        return TextInputType.text;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(
+        left: 16,
+        right: 16,
+        top: 16,
+        bottom: MediaQuery.of(context).viewInsets.bottom + 16,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            widget.command.name,
+            style: Theme.of(context).textTheme.titleMedium,
+          ),
+          const SizedBox(height: 12),
+          for (final field in widget.command.fields)
+            Padding(
+              padding: const EdgeInsets.only(bottom: 12),
+              child: TextField(
+                controller: _controllers[field.tag],
+                keyboardType: _keyboardTypeForType(field.type),
+                decoration: InputDecoration(
+                  labelText: field.name,
+                  hintText: _hintForType(field.type),
+                  border: const OutlineInputBorder(),
+                ),
+              ),
+            ),
+          Row(
+            children: [
+              Expanded(
+                child: OutlinedButton(
+                  onPressed: () => Navigator.pop(context),
+                  child: const Text('Cancel'),
+                ),
+              ),
+              const SizedBox(width: 12),
+              Expanded(
+                child: ElevatedButton.icon(
+                  onPressed: () {
+                    final values = {
+                      for (final entry in _controllers.entries)
+                        entry.key: entry.value.text,
+                    };
+                    Navigator.pop(context, values);
+                  },
+                  icon: const Icon(Icons.send),
+                  label: const Text('Send'),
+                ),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -499,34 +996,57 @@ class _OnOffPageState extends State<OnOffPage> {
 
   @override
   Widget build(BuildContext context) {
-    return ListView(
-      children: [
-        ListTile(
-          title: const Text('Off'),
-          onTap: () {
-            _onoffControl(0);
-          },
+    return Card(
+      child: Padding(
+        padding: const EdgeInsets.all(12),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                const Expanded(
+                  child: Text(
+                    'Power',
+                    style: TextStyle(fontSize: 16, fontWeight: FontWeight.w600),
+                  ),
+                ),
+                TextButton.icon(
+                  onPressed: _subscribe,
+                  icon: const Icon(Icons.refresh),
+                  label: const Text('Refresh'),
+                ),
+              ],
+            ),
+            if (onoffState != null) ...[
+              const SizedBox(height: 4),
+              Text(onoffState!),
+            ],
+            const SizedBox(height: 12),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                ElevatedButton.icon(
+                  onPressed: () => _onoffControl(1),
+                  icon: const Icon(Icons.lightbulb),
+                  label: const Text('Turn on'),
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: () => _onoffControl(0),
+                  icon: const Icon(Icons.power_settings_new),
+                  label: const Text('Turn off'),
+                ),
+                const SizedBox(height: 8),
+                OutlinedButton.icon(
+                  onPressed: () => _onoffControl(2),
+                  icon: const Icon(Icons.sync),
+                  label: const Text('Toggle'),
+                ),
+              ],
+            ),
+          ],
         ),
-        ListTile(
-          title: const Text('On'),
-          onTap: () {
-            _onoffControl(1);
-          },
-        ),
-        ListTile(
-          title: const Text('Toggle'),
-          onTap: () {
-            _onoffControl(2);
-          },
-        ),
-        ListTile(
-          title: const Text('Subscribe on/off state'),
-          subtitle: onoffState == null ? null : Text(onoffState!),
-          onTap: () {
-            _subscribe();
-          },
-        ),
-      ],
+      ),
     );
   }
 }
@@ -676,7 +1196,7 @@ class _ClusterDetailPageState extends State<ClusterDetailPage> {
           children: [
             Expanded(
               child: Text(
-                '${matterClusterName(widget.clusterId)} ${matterHex(widget.clusterId, width: 8)}',
+                matterClusterName(widget.clusterId),
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -686,7 +1206,6 @@ class _ClusterDetailPageState extends State<ClusterDetailPage> {
             ),
           ],
         ),
-        Text('Endpoint ${widget.endpointId}'),
         if (!_isConnected)
           const Padding(
             padding: EdgeInsets.only(top: 8),
@@ -712,7 +1231,6 @@ class _ClusterDetailPageState extends State<ClusterDetailPage> {
               ..sort((a, b) => a.key.compareTo(b.key)))
           _AttributeRow(
             name: matterAttributeName(widget.clusterId, entry.key),
-            id: entry.key,
             value: entry.value.value,
             isLastKnown: false,
           ),
@@ -723,32 +1241,38 @@ class _ClusterDetailPageState extends State<ClusterDetailPage> {
                 widget.clusterId,
                 _cachedAttributeId(entry.key),
               ),
-              id: _cachedAttributeId(entry.key),
               value: entry.value,
               isLastKnown: true,
             ),
         const Divider(height: 24),
         Text('Commands', style: Theme.of(context).textTheme.titleSmall),
         const SizedBox(height: 8),
-        if (commands.isEmpty) const Text('No known commands in catalog'),
-        for (final command in commands)
-          ListTile(
-            contentPadding: EdgeInsets.zero,
-            title: Text(command.value.name),
-            subtitle: Text(
-              command.value.fields.isEmpty
-                  ? 'No fields'
-                  : command.value.fields.map(_fieldLabel).join(', '),
+        if (commands.isEmpty) const Text('No known commands for this cluster'),
+        if (_isConnected)
+          for (final command in commands)
+            _CommandCard(
+              chipDeviceController: widget.chipDeviceController!,
+              controlDevice: widget.controlDevice,
+              controlContext: widget.controlContext,
+              endpointId: widget.endpointId,
+              entry: _CommandEntry(
+                clusterId: widget.clusterId,
+                clusterName: matterClusterName(widget.clusterId),
+                commandId: command.key,
+                command: command.value,
+              ),
+            )
+        else
+          for (final command in commands)
+            Card(
+              margin: const EdgeInsets.only(bottom: 8),
+              child: ListTile(
+                title: Text(command.value.name),
+                subtitle: const Text('Connect to the device to send this'),
+              ),
             ),
-            trailing: Text(matterHex(command.key, width: 8)),
-          ),
       ],
     );
-  }
-
-  String _fieldLabel(CommandFieldInfo field) {
-    final nullable = field.nullable ? '?' : '';
-    return '${field.name}: ${field.type.name}$nullable';
   }
 
   int _cachedAttributeId(String key) {
@@ -759,13 +1283,11 @@ class _ClusterDetailPageState extends State<ClusterDetailPage> {
 
 class _AttributeRow extends StatelessWidget {
   final String name;
-  final int id;
   final String value;
   final bool isLastKnown;
 
   const _AttributeRow({
     required this.name,
-    required this.id,
     required this.value,
     required this.isLastKnown,
   });
@@ -777,13 +1299,242 @@ class _AttributeRow extends StatelessWidget {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          SizedBox(
-            width: 180,
-            child: Text('$name\n${matterHex(id, width: 8)}'),
-          ),
+          SizedBox(width: 180, child: Text(name)),
           Expanded(child: Text(isLastKnown ? 'last known: $value' : value)),
         ],
       ),
+    );
+  }
+}
+
+/// Advanced tab: every cluster the device supports, nothing filtered out —
+/// for browsing raw attributes/commands beyond the curated Device tab.
+class AdvancedDevicePage extends StatelessWidget {
+  final ChipDeviceController? chipDeviceController;
+  final Device controlDevice;
+  final Object? controlContext;
+  final List<int> supportedClusters;
+
+  const AdvancedDevicePage({
+    super.key,
+    required this.chipDeviceController,
+    required this.controlDevice,
+    required this.controlContext,
+    required this.supportedClusters,
+  });
+
+  bool get _isConnected =>
+      chipDeviceController != null && controlContext != null;
+
+  @override
+  Widget build(BuildContext context) {
+    final clusters = supportedClusters.toSet().toList()..sort();
+
+    return ListView(
+      padding: const EdgeInsets.all(12),
+      children: [
+        Text('Advanced', style: Theme.of(context).textTheme.titleMedium),
+        const SizedBox(height: 4),
+        if (!_isConnected)
+          const Text('Device not connected. Showing last-known clusters.'),
+        const SizedBox(height: 8),
+        if (clusters.isEmpty)
+          const Text('No device features were discovered yet.'),
+        for (final clusterId in clusters)
+          Card(
+            margin: const EdgeInsets.only(bottom: 8),
+            child: ListTile(
+              title: Text(matterClusterName(clusterId)),
+              subtitle: Text(matterHex(clusterId, width: 8)),
+              trailing: const Icon(Icons.chevron_right),
+              onTap: () {
+                Navigator.of(context).push(
+                  MaterialPageRoute(
+                    builder: (_) => Scaffold(
+                      appBar: AppBar(title: Text(matterClusterName(clusterId))),
+                      body: ClusterDetailPage(
+                        chipDeviceController: chipDeviceController,
+                        controlDevice: controlDevice,
+                        controlContext: controlContext,
+                        endpointId: 1,
+                        clusterId: clusterId,
+                      ),
+                    ),
+                  ),
+                );
+              },
+            ),
+          ),
+      ],
+    );
+  }
+}
+
+/// Reusable "current status" panel: a wildcard subscription the user can
+/// start/stop to watch live attribute reports and events as they arrive.
+class LiveStatusPanel extends StatefulWidget {
+  final ChipDeviceController chipDeviceController;
+  final Device controlDevice;
+  final Object? controlContext;
+
+  const LiveStatusPanel({
+    super.key,
+    required this.chipDeviceController,
+    required this.controlDevice,
+    this.controlContext,
+  });
+
+  @override
+  State<LiveStatusPanel> createState() => _LiveStatusPanelState();
+}
+
+class _LiveStatusPanelState extends State<LiveStatusPanel> {
+  bool _liveFeedOn = false;
+  final Set<int> _subscriptionIds = {};
+  final List<String> _eventLog = [];
+
+  @override
+  void dispose() {
+    for (final id in _subscriptionIds) {
+      widget.chipDeviceController.getFabricIndex().then((value) {
+        if (value == null) {
+          return;
+        }
+        widget.chipDeviceController.unSubscription(
+          value,
+          widget.controlDevice.nodeId,
+          id,
+        );
+      });
+    }
+    super.dispose();
+  }
+
+  String _hex(Uint8List? bytes) => bytes == null
+      ? ''
+      : bytes.map((b) => b.toRadixString(16).padLeft(2, '0')).join();
+
+  String _decodeAttribute(int attributeId, AttributeState state) {
+    final tlv = state.tlv;
+    if (tlv == null) {
+      return state.json ?? '';
+    }
+    try {
+      return TlvReader(tlv).getString(AnonymousTag.instance).toString();
+    } catch (_) {
+      return _hex(tlv);
+    }
+  }
+
+  void _toggleLiveFeed() {
+    if (_liveFeedOn) {
+      setState(() {
+        _liveFeedOn = false;
+      });
+      return;
+    }
+    setState(() {
+      _liveFeedOn = true;
+    });
+    widget.chipDeviceController.subscribe(
+      widget.controlDevice.nodeId,
+      SubscriptionCallbackWarp(
+        onSubscriptionEstablishedFun: (id) {
+          _subscriptionIds.add(id);
+        },
+        onReportFun: (nodeState) {
+          final lines = <String>[];
+          final ts = DateTime.now()
+              .toIso8601String()
+              .split('T')
+              .last
+              .split('.')
+              .first;
+          nodeState.endpoints.forEach((epId, endpoint) {
+            endpoint.clusters.forEach((clusterId, cluster) {
+              final clusterName = matterClusterName(clusterId);
+              cluster.attributes.forEach((attrId, attr) {
+                lines.add(
+                  '[$ts] $clusterName • ${matterAttributeName(clusterId, attrId)} = ${_decodeAttribute(attrId, attr)}',
+                );
+              });
+              cluster.events.forEach((eventId, events) {
+                for (final e in events) {
+                  lines.add(
+                    '[$ts] $clusterName • event #${e.eventNumber} = ${_hex(e.tlv)}',
+                  );
+                }
+              });
+            });
+          });
+          if (lines.isEmpty || !mounted) {
+            return;
+          }
+          setState(() {
+            _eventLog.insertAll(0, lines);
+            if (_eventLog.length > 200) {
+              _eventLog.removeRange(200, _eventLog.length);
+            }
+          });
+        },
+      ),
+      [
+        ChipAttributePath(
+          endpointId: ChipPathId.forWildcard(),
+          clusterId: ChipPathId.forWildcard(),
+          attributeId: ChipPathId.forWildcard(),
+        ),
+      ],
+      [
+        ChipEventPath(
+          endpointId: ChipPathId.forWildcard(),
+          clusterId: ChipPathId.forWildcard(),
+          eventId: ChipPathId.forWildcard(),
+          isUrgent: false,
+        ),
+      ],
+      null,
+      1,
+      30,
+      true,
+      false,
+      10000,
+      0,
+      connectContext: widget.controlContext,
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              'Status & events',
+              style: Theme.of(context).textTheme.titleSmall,
+            ),
+            ElevatedButton.icon(
+              onPressed: _toggleLiveFeed,
+              icon: Icon(_liveFeedOn ? Icons.stop : Icons.play_arrow),
+              label: Text(_liveFeedOn ? 'Stop' : 'Start'),
+            ),
+          ],
+        ),
+        const SizedBox(height: 8),
+        if (_eventLog.isEmpty)
+          const Text('No live updates yet. Press Start to watch this device.'),
+        for (final line in _eventLog)
+          Padding(
+            padding: const EdgeInsets.symmetric(vertical: 2),
+            child: Text(
+              line,
+              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
+            ),
+          ),
+      ],
     );
   }
 }
@@ -1039,7 +1790,7 @@ class _SharingTabPageState extends State<SharingTabPage> {
           children: [
             Expanded(
               child: Text(
-                'Sharing',
+                'Share this device',
                 style: Theme.of(context).textTheme.titleMedium,
               ),
             ),
@@ -1049,9 +1800,13 @@ class _SharingTabPageState extends State<SharingTabPage> {
             ),
           ],
         ),
+        const Text(
+          'Create a pairing code for another phone or app, or remove old controllers that can access this device.',
+        ),
+        const SizedBox(height: 12),
         ElevatedButton(
           onPressed: _openWindow,
-          child: const Text('Open commissioning window'),
+          child: const Text('Create sharing code'),
         ),
         if (_manualPairingCode != null) ...[
           const SizedBox(height: 12),
@@ -1070,19 +1825,23 @@ class _SharingTabPageState extends State<SharingTabPage> {
           SelectableText(_qrCode!),
         ],
         const Divider(height: 24),
-        Text('Fabrics', style: Theme.of(context).textTheme.titleSmall),
+        Text(
+          'Connected controllers',
+          style: Theme.of(context).textTheme.titleSmall,
+        ),
         if (_loading) const LinearProgressIndicator(),
-        if (!_loading && _fabrics.isEmpty) const Text('No fabrics read yet'),
+        if (!_loading && _fabrics.isEmpty)
+          const Text('No connected controllers were read yet.'),
         for (final fabric in _fabrics)
           ListTile(
             contentPadding: EdgeInsets.zero,
             title: Text(
               fabric.label?.isNotEmpty == true
                   ? fabric.label!
-                  : 'Fabric ${fabric.fabricIndex ?? '-'}',
+                  : 'Controller ${fabric.fabricIndex ?? '-'}',
             ),
             subtitle: Text(
-              'Vendor ID: ${fabric.vendorId ?? '-'}  Fabric ID: ${fabric.fabricId ?? '-'}  Node ID: ${fabric.nodeId ?? '-'}',
+              'Vendor ID: ${fabric.vendorId ?? '-'}  Node ID: ${fabric.nodeId ?? '-'}',
             ),
             trailing: fabric.fabricIndex == _currentFabricIndex
                 ? const Text('Current')
@@ -1090,7 +1849,7 @@ class _SharingTabPageState extends State<SharingTabPage> {
                     onPressed: fabric.fabricIndex == null
                         ? null
                         : () => _revokeFabric(fabric.fabricIndex!),
-                    child: const Text('Revoke'),
+                    child: const Text('Remove'),
                   ),
           ),
       ],
@@ -1362,31 +2121,10 @@ class _DeviceInfoTabPageState extends State<DeviceInfoTabPage> {
 
   bool _loadingInfo = false;
   Map<int, String> _basicInfo = {};
-  bool _liveFeedOn = false;
-  final Set<int> _subscriptionIds = {};
-  final List<String> _eventLog = [];
-
   @override
   void initState() {
     super.initState();
     _loadBasicInfo();
-  }
-
-  @override
-  void dispose() {
-    for (final id in _subscriptionIds) {
-      widget.chipDeviceController.getFabricIndex().then((value) {
-        if (value == null) {
-          return;
-        }
-        widget.chipDeviceController.unSubscription(
-          value,
-          widget.controlDevice.nodeId,
-          id,
-        );
-      });
-    }
-    super.dispose();
   }
 
   String _hex(Uint8List? bytes) => bytes == null
@@ -1471,83 +2209,6 @@ class _DeviceInfoTabPageState extends State<DeviceInfoTabPage> {
     );
   }
 
-  void _toggleLiveFeed() {
-    if (_liveFeedOn) {
-      setState(() {
-        _liveFeedOn = false;
-      });
-      return;
-    }
-    setState(() {
-      _liveFeedOn = true;
-    });
-    widget.chipDeviceController.subscribe(
-      widget.controlDevice.nodeId,
-      SubscriptionCallbackWarp(
-        onSubscriptionEstablishedFun: (id) {
-          _subscriptionIds.add(id);
-        },
-        onReportFun: (nodeState) {
-          final lines = <String>[];
-          final ts = DateTime.now()
-              .toIso8601String()
-              .split('T')
-              .last
-              .split('.')
-              .first;
-          nodeState.endpoints.forEach((epId, endpoint) {
-            endpoint.clusters.forEach((clusterId, cluster) {
-              cluster.attributes.forEach((attrId, attr) {
-                lines.add(
-                  '[$ts] attr ep:$epId cluster:0x${clusterId.toRadixString(16)} attr:0x${attrId.toRadixString(16)} = ${_decodeAttribute(attrId, attr)}',
-                );
-              });
-              cluster.events.forEach((eventId, events) {
-                for (final e in events) {
-                  lines.add(
-                    '[$ts] event ep:$epId cluster:0x${clusterId.toRadixString(16)} event:0x${eventId.toRadixString(16)} #${e.eventNumber} = ${_hex(e.tlv)}',
-                  );
-                }
-              });
-            });
-          });
-          if (lines.isEmpty || !mounted) {
-            return;
-          }
-          setState(() {
-            _eventLog.insertAll(0, lines);
-            if (_eventLog.length > 200) {
-              _eventLog.removeRange(200, _eventLog.length);
-            }
-          });
-        },
-      ),
-      [
-        ChipAttributePath(
-          endpointId: ChipPathId.forWildcard(),
-          clusterId: ChipPathId.forWildcard(),
-          attributeId: ChipPathId.forWildcard(),
-        ),
-      ],
-      [
-        ChipEventPath(
-          endpointId: ChipPathId.forWildcard(),
-          clusterId: ChipPathId.forWildcard(),
-          eventId: ChipPathId.forWildcard(),
-          isUrgent: false,
-        ),
-      ],
-      null,
-      1,
-      30,
-      true,
-      false,
-      10000,
-      0,
-      connectContext: widget.controlContext,
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final device = widget.controlDevice;
@@ -1595,30 +2256,6 @@ class _DeviceInfoTabPageState extends State<DeviceInfoTabPage> {
                 ),
                 Expanded(child: Text(entry.value)),
               ],
-            ),
-          ),
-        const Divider(height: 24),
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Text(
-              'Live events & attribute reports',
-              style: Theme.of(context).textTheme.titleMedium,
-            ),
-            ElevatedButton(
-              onPressed: _toggleLiveFeed,
-              child: Text(_liveFeedOn ? 'Stop' : 'Start'),
-            ),
-          ],
-        ),
-        const SizedBox(height: 8),
-        if (_eventLog.isEmpty) const Text('No events received yet'),
-        for (final line in _eventLog)
-          Padding(
-            padding: const EdgeInsets.symmetric(vertical: 2),
-            child: Text(
-              line,
-              style: const TextStyle(fontFamily: 'monospace', fontSize: 12),
             ),
           ),
       ],

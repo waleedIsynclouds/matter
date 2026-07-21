@@ -444,6 +444,70 @@
       "related_bugs": [],
       "occurrences": 2,
       "last_seen": "2026-07-21T12:55:31.339Z"
+    },
+    {
+      "id": "bug-028",
+      "timestamp": "2026-07-21T13:35:33.081Z",
+      "error_message": "Significant refactor of ",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "22 lines replaced/restructured",
+      "fix": "Rewrote 65→41 lines (22 removed)",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-21T13:35:33.081Z"
+    },
+    {
+      "id": "bug-029",
+      "timestamp": "2026-07-21T13:36:01.443Z",
+      "error_message": "Null/undefined access in ",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Property access on potentially null/undefined value",
+      "fix": "Added null safety (optional chaining or null check) | Also: /// Device tab: quick controls, available commands, and clus; /// browsing all in one page (replaces the old separate Cont",
+      "tags": [
+        "auto-detected",
+        "null-safety",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 2,
+      "last_seen": "2026-07-21T13:36:40.627Z"
+    },
+    {
+      "id": "bug-030",
+      "timestamp": "2026-07-21T13:45:24.896Z",
+      "error_message": "Missing error handling in unknown",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "Code path had no error handling — exceptions would propagate uncaught",
+      "fix": "Added try/catch block",
+      "tags": [
+        "auto-detected",
+        "error-handling",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 1,
+      "last_seen": "2026-07-21T13:45:24.896Z"
+    },
+    {
+      "id": "bug-031",
+      "timestamp": "2026-07-21T13:45:34.853Z",
+      "error_message": "Significant refactor of ",
+      "file": "example/lib/control_page.dart",
+      "root_cause": "19 lines replaced/restructured",
+      "fix": "Rewrote 41→18 lines (19 removed) | Also: bool _liveFeedOn = false;; final Set<int> _subscriptionIds = {}; | Also: const Divider(height: 24),; Row( | Also: onPressed: _changeConnectState,; child: Text(connectContext == null ? \"Connect\" : \"",
+      "tags": [
+        "auto-detected",
+        "refactor",
+        "dart"
+      ],
+      "related_bugs": [],
+      "occurrences": 4,
+      "last_seen": "2026-07-21T13:46:20.578Z"
     }
   ]
 }
