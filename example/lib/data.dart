@@ -194,9 +194,6 @@ Future<List<Uint8List>> getX509Certificate() async {
     final operationalCertificate = Uint8List.fromList(
       matterInfoData['nodeOC'].cast<int>(),
     );
-    print(
-      'rootCertificate: ${base64.encode(rootCertificate)} \n operationalCertificate: ${base64.encode(operationalCertificate)}',
-    );
     return [rootCertificate, operationalCertificate];
   }
   final asymmetricKeyPair = await genAsymmetricKeyPair();

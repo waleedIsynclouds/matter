@@ -377,6 +377,24 @@ static ZGMTRDeviceController* getZGMTRDeviceController(NSString *handle) {
     return [c controller];
 }
 
+static NSString * _Nullable existingDeviceControllerHandle(FlutterControllerParams *params) {
+    for (NSString *handle in controls) {
+        FlutterDeviceController *controller = [controls objectForKey:handle];
+        FlutterControllerParams *existingParams = [controller controllerParams];
+        if (existingParams == nil) {
+            continue;
+        }
+        BOOL sameFabric = existingParams.fabricId == params.fabricId;
+        BOOL sameRootCertificate =
+            (existingParams.rootCertificate == params.rootCertificate) ||
+            [existingParams.rootCertificate isEqualToData:params.rootCertificate];
+        if (sameFabric && sameRootCertificate && [controller controller] != nil) {
+            return handle;
+        }
+    }
+    return nil;
+}
+
 /// convert to flutter NodeState class json
 static NSDictionary * convertNodeStateJsonFormat(NSArray<NSDictionary<NSString *,id> *> * _Nullable values) {
     NSMutableDictionary * nodeState = [[NSMutableDictionary alloc] init];
@@ -492,6 +510,10 @@ static NSDictionary * convertNodeStateJsonFormat(NSArray<NSDictionary<NSString *
 static NSString *newDeviceControllerCall(NSString *params) {
     NSDictionary *jsonObject = parseJSONString(params);
     FlutterControllerParams *fControlParams = mapFlutterControllerParams(jsonObject);
+    NSString *existingHandle = existingDeviceControllerHandle(fControlParams);
+    if (existingHandle != nil) {
+        return createFlutterRequestResultWithCode(0, @{@"handle" : existingHandle});
+    }
     ZGMTRDeviceControllerStartupParams *controllerParams =
         mapControllerParams(fControlParams);
     ZGMTRControllerFactory *factory = [ZGMTRControllerFactory sharedInstance];

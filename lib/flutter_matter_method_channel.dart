@@ -15,10 +15,7 @@ class PlatformResult {
 
   @override
   String toString() {
-    return jsonEncode({
-      'code': code,
-      'jsonData': jsonData
-    });
+    return jsonEncode({'code': code, 'jsonData': jsonData});
   }
 }
 
@@ -26,13 +23,16 @@ class RequestPlatformParams {
   final String methodName;
   final String methodParamsJson;
 
-  RequestPlatformParams({required this.methodName, required this.methodParamsJson});
+  RequestPlatformParams({
+    required this.methodName,
+    required this.methodParamsJson,
+  });
 
   @override
   String toString() {
     return jsonEncode({
       'methodName': methodName,
-      'methodParamsJson': methodParamsJson
+      'methodParamsJson': methodParamsJson,
     });
   }
 }
@@ -43,14 +43,10 @@ class PlatformCallResult extends TransportObject {
 
   PlatformCallResult({required this.code, required this.resultJson});
 
-
   @override
   String encode() {
-    return jsonEncode({
-      'code': code,
-      'resultJson': resultJson
-    });
-  }  
+    return jsonEncode({'code': code, 'resultJson': resultJson});
+  }
 }
 
 abstract class MethodCallHandler {
@@ -78,14 +74,16 @@ class MethodChannelFlutterMatter extends FlutterMatterPlatform {
   void addHandler(MethodCallHandler handler) {
     _handlers.add(handler);
   }
-  
+
   void removeHandler(MethodCallHandler handler) {
     _handlers.remove(handler);
   }
 
   MethodChannelFlutterMatter() {
     methodChannel.setMethodCallHandler((call) async {
-      matterPrint('methodChannel called: ${call.method} with arguments: ${call.arguments}');
+      matterPrint(
+        'methodChannel called: ${call.method} with arguments: ${call.arguments}',
+      );
       String m = call.method;
       dynamic p = call.arguments;
       try {
@@ -101,19 +99,65 @@ class MethodChannelFlutterMatter extends FlutterMatterPlatform {
         if (e is PlatformCallResult) {
           return e;
         }
-        return createPlatformCallExceptionResult(unHandlerException, s.toString());
+        return createPlatformCallExceptionResult(
+          unHandlerException,
+          s.toString(),
+        );
       }
     });
   }
 
   Future<PlatformResult> requestPlatform(RequestPlatformParams params) async {
-    matterPrint("$runtimeType requestPlatform -> $params");
-    final result = await methodChannel.invokeMethod(params.methodName, params.methodParamsJson);
+    matterPrint(
+      "$runtimeType requestPlatform -> ${_redactRequestParams(params)}",
+    );
+    final result = await methodChannel.invokeMethod(
+      params.methodName,
+      params.methodParamsJson,
+    );
     assert(result is String);
     final decodeResult = jsonDecode(result);
     assert(decodeResult['code'] is int);
     assert(decodeResult['jsonData'] is Map);
-    matterPrint('$runtimeType requestPlatform ${params.methodName} <- $decodeResult');
-    return PlatformResult(code: decodeResult['code'], jsonData: decodeResult['jsonData'].cast<String, dynamic>());
+    matterPrint(
+      '$runtimeType requestPlatform ${params.methodName} <- $decodeResult',
+    );
+    return PlatformResult(
+      code: decodeResult['code'],
+      jsonData: decodeResult['jsonData'].cast<String, dynamic>(),
+    );
+  }
+
+  String _redactRequestParams(RequestPlatformParams params) {
+    try {
+      final data = jsonDecode(params.methodParamsJson);
+      if (data is Map<String, dynamic>) {
+        for (final key in const [
+          'rootCertificate',
+          'intermediateCertificate',
+          'operationalCertificate',
+          'signingCertificate',
+          'operationalPublicKey',
+          'csr',
+        ]) {
+          if (data.containsKey(key)) {
+            data[key] = '<redacted>';
+          }
+        }
+        return jsonEncode({
+          'methodName': params.methodName,
+          'methodParamsJson': jsonEncode(data),
+        });
+      }
+    } catch (_) {
+      return jsonEncode({
+        'methodName': params.methodName,
+        'methodParamsJson': '<redacted>',
+      });
+    }
+    return jsonEncode({
+      'methodName': params.methodName,
+      'methodParamsJson': params.methodParamsJson,
+    });
   }
 }

@@ -81,9 +81,21 @@ class _ControlPageState extends State<ControlPage>
     supportedClusters = widget.device.supportedClusters ?? const [];
     tabs = _buildTabs();
     tabController = TabController(length: tabs.length, vsync: this);
-    createChipDeviceController().then((value) {
-      chipDeviceController = value;
-    });
+    createChipDeviceController()
+        .then((value) {
+          if (!mounted) {
+            return;
+          }
+          setState(() {
+            chipDeviceController = value;
+          });
+        })
+        .catchError((e) {
+          if (!mounted) {
+            return;
+          }
+          showToast('Failed to create Matter controller');
+        });
   }
 
   @override
@@ -196,13 +208,19 @@ class _ControlPageState extends State<ControlPage>
   }
 
   void _unPairDevice() {
+    final controller = chipDeviceController;
+    final currentContext = connectContext;
+    if (controller == null || currentContext == null) {
+      showToast("Device not connected");
+      return;
+    }
     int endpointId = 0; // root endpoint
     int attributeId = 0x00000005;
     int clusterId = 0x0000003E;
 
-    chipDeviceController!.read(
+    controller.read(
       widget.device.nodeId,
-      connectContext: connectContext,
+      connectContext: currentContext,
       ReportCallbackWarp(
         onReportFun: (nodeState) {
           final tlvData = nodeState
@@ -222,7 +240,7 @@ class _ControlPageState extends State<ControlPage>
           tlvWriter.startStructure(AnonymousTag.instance);
           tlvWriter.putUnsigned(ContextSpecificTag(0), fabricIndex);
           tlvWriter.endStructure();
-          chipDeviceController!.invoke(
+          controller.invoke(
             InvokeCallbackWarp(
               onResponseCB: (p0, p1) {
                 showToast("delete success");
@@ -235,7 +253,7 @@ class _ControlPageState extends State<ControlPage>
             ),
             widget.device.nodeId,
             timedRequestTimeoutMs: 5000,
-            connectContext: connectContext,
+            connectContext: currentContext,
             InvokeElement.create(
               endpointId,
               clusterId,
@@ -792,6 +810,11 @@ class _OCWTabPageState extends State<OCWTabPage> {
   String? _qrCode;
 
   void _openWindow() {
+    final currentContext = widget.controlContext;
+    if (currentContext == null) {
+      showToast("Device not connected");
+      return;
+    }
     final tlvWriter = TlvWriter();
     tlvWriter.startStructure(AnonymousTag.instance);
     tlvWriter.endStructure();
@@ -807,7 +830,7 @@ class _OCWTabPageState extends State<OCWTabPage> {
         onDoneCB: () {
           widget.chipDeviceController
               .openPairingWindowWithPIN(
-                widget.controlContext!,
+                currentContext,
                 180,
                 3850,
                 20202021,
@@ -835,7 +858,7 @@ class _OCWTabPageState extends State<OCWTabPage> {
       ),
       widget.controlDevice.nodeId,
       invokeElement,
-      connectContext: widget.controlContext,
+      connectContext: currentContext,
       timedRequestTimeoutMs: 2000,
       imTimeoutMs: 0,
     );
@@ -901,6 +924,11 @@ class _SharingTabPageState extends State<SharingTabPage> {
   }
 
   void _openWindow() {
+    final currentContext = widget.controlContext;
+    if (currentContext == null) {
+      showToast("Device not connected");
+      return;
+    }
     final tlvWriter = TlvWriter();
     tlvWriter.startStructure(AnonymousTag.instance);
     tlvWriter.endStructure();
@@ -915,7 +943,7 @@ class _SharingTabPageState extends State<SharingTabPage> {
       InvokeCallbackWarp(
         onDoneCB: () {
           widget.chipDeviceController.openPairingWindowWithPIN(
-            widget.controlContext!,
+            currentContext,
             180,
             3850,
             20202021,
@@ -936,7 +964,7 @@ class _SharingTabPageState extends State<SharingTabPage> {
       ),
       widget.controlDevice.nodeId,
       invokeElement,
-      connectContext: widget.controlContext,
+      connectContext: currentContext,
       timedRequestTimeoutMs: 2000,
     );
   }
